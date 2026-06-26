@@ -1,0 +1,1 @@
+nuitka --onefile --windows-console-mode=disable --output-dir=build --include-data-file="logo.png=logo.png" --include-data-file="ffmpeg.exe=ffmpeg.exe" --windows-icon-from-ico="logo.ico" --enable-plugin=pyqt6 --enable-plugin=dill-compat --include-package=cv2 --include-package=pysindy --include-package=pandas TR-SINDY-Final.py
