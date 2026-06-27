@@ -1,0 +1,63 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - run: pip install ruff
+      - run: ruff check src/ tests/
+      - run: ruff format --check src/ tests/
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -e ".[dev,ml,export]"
+      - name: Compile check
+        run: python -m py_compile src/tr_sindy_app/*.py
+      - name: Run tests
+        run: pytest tests/ -v --tb=short
+        env:
+          QT_QPA_PLATFORM: offscreen
+
+  smoke-test-gui:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install GUI dependencies
+        run: |
+          sudo apt-get update && sudo apt-get install -y libegl1 libgl1 libglib2.0-0
+          pip install -e ".[dev,ml]"
+      - name: Smoke-test GUI construction
+        run: |
+          QT_QPA_PLATFORM=offscreen python -c "
+          import sys; sys.path.insert(0,'src')
+          from PyQt6 import QtWidgets
+          from tr_sindy_app.gui import FluidGui
+          app = QtWidgets.QApplication([])
+          w = FluidGui()
+          print('GUI construction OK')
+          "

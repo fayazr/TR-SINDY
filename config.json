@@ -1,19 +1,41 @@
 {
   "app_name": "Turbulence Realm - SINDy",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "default_calibration_distance": 0.1,
   "supported_formats": ["mp4", "avi", "mov"],
   "mmap_dir": "./velocity_mmaps",
   "optical_flow": {
-    "pyr_scale": 0.3,
-    "levels": 7,
-    "winsize": 21,
-    "iterations": 7,
-    "poly_n": 7,
-    "poly_sigma": 1.1
+    "default_backend": "farneback",
+    "available_backends": ["farneback", "lucas_kanade", "tvl1", "raft", "pwcnet"],
+    "farneback": {
+      "pyr_scale": 0.3,
+      "levels": 7,
+      "winsize": 21,
+      "iterations": 7,
+      "poly_n": 7,
+      "poly_sigma": 1.1
+    },
+    "temporal_smoothing": ["none", "ema", "moving"],
+    "multiscale_levels": 3
   },
   "sindy": {
+    "libraries": ["polynomial", "fourier", "combined", "custom", "trig"],
+    "optimizers": ["stlsq", "sr3", "frols", "constrained_sr3"],
     "default_degree": 3,
-    "default_threshold": 0.07
-  }
+    "default_threshold": 0.07,
+    "default_n_freq": 1
+  },
+  "analysis": [
+    "vorticity", "strain_rate", "divergence", "spatial_spectrum",
+    "temporal_spectrum", "pod", "dmd", "turbulence_stats",
+    "structure_function", "velocity_pdf", "error_metrics", "region_stats"
+  ],
+  "ml_models": [
+    "pinn_navier_stokes", "autoencoder_sindy", "fno2d", "deeponet",
+    "convlstm", "vae", "ensemble_uncertainty", "mc_dropout",
+    "gan", "diffusion_stub", "gnn_stub", "granger_causality", "causal_sindy"
+  ],
+  "export_formats": ["csv", "hdf5", "netcdf", "parquet", "json", "pdf", "images", "animation"],
+  "presets": ["farneback-default", "tvl1-turbulent", "raft-precise", "lk-fast"],
+  "project_extension": ".trsindy"
 }

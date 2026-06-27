@@ -5,26 +5,55 @@ dist/
 __pycache__/
 *.pyo
 *.pyd
-
-# Large files
-*.mp4
-*.avi
-*.mov
-
-# Python
 *.egg-info/
 .eggs/
 *.egg
+
+# Screenshots / temp files
+1.png
+*.tmp
+
+# Packaging
+.venv/
+venv/
+env/
+pip-wheel-metadata/
+
+# Large media files (use git-lfs if you need to track these)
+*.mp4
+*.avi
+*.mov
+*.mkv
+
+# Project / data outputs
+*.trsindy
+velocity_mmaps/
+output/
+exports/
+reports/
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.mypy_cache/
+.ruff_cache/
 
 # IDE
 .vscode/
 .idea/
 *.swp
 *.swo
+*~
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Memory maps
-velocity_mmaps/
+# Logs
+*.log
+
+# Nuitka build outputs
+*.build/
+*.dist/

@@ -12,38 +12,52 @@ animation export) is preserved byte-for-byte in behaviour; only the
 presentation layer has been reskinned into a futuristic dark console.
 """
 
-import sys
-import os
-import io
 import math
+import os
+import sys
 import time
 
 import cv2
-import numpy as np
-from scipy.ndimage import gaussian_filter
-import pandas as pd
-
 import matplotlib
-import matplotlib.pyplot as plt
 import matplotlib.animation as animation
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+import pysindy as ps
 from matplotlib.backends.backend_qtagg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qtagg import NavigationToolbar2QT as NavigationToolbar
-
-import pysindy as ps
+from PyQt6 import QtCore, QtGui, QtWidgets
+from PyQt6.QtCore import Qt
+from PyQt6.QtGui import (
+    QBrush,
+    QColor,
+    QFont,
+    QLinearGradient,
+    QPainter,
+    QPalette,
+    QPen,
+    QPixmap,
+    QRadialGradient,
+)
+from PyQt6.QtWidgets import (
+    QApplication,
+    QFrame,
+    QGridLayout,
+    QHBoxLayout,
+    QLabel,
+    QLineEdit,
+    QProgressBar,
+    QPushButton,
+    QSizePolicy,
+    QSplashScreen,
+    QStatusBar,
+    QTabWidget,
+    QVBoxLayout,
+    QWidget,
+)
 from pysindy.feature_library import PolynomialLibrary
 from pysindy.optimizers import STLSQ
-
-from PyQt6 import QtWidgets, QtGui, QtCore
-from PyQt6.QtWidgets import (
-    QApplication, QTabWidget, QWidget, QVBoxLayout, QHBoxLayout, QGridLayout,
-    QLabel, QLineEdit, QPushButton, QProgressBar, QStatusBar, QFrame,
-    QSizePolicy, QSplashScreen
-)
-from PyQt6.QtGui import (
-    QPixmap, QFont, QColor, QPainter, QIcon, QAction, QPalette, QPen, QBrush,
-    QLinearGradient, QRadialGradient
-)
-from PyQt6.QtCore import Qt
+from scipy.ndimage import gaussian_filter
 
 
 # =====================================================================
@@ -641,10 +655,10 @@ class FluidGui(QtWidgets.QWidget):
         c, bg, br = colors.get(state, colors["idle"])
         self.status_pill.setText(text)
         self.status_pill.setStyleSheet(
-            "QLabel#statusPill {{ color: {c}; background-color: {bg};"
-            " border: 1px solid {br}; border-radius: 11px; padding: 4px 14px;"
-            " font-family: '{m}'; font-size: 8pt; font-weight: bold;"
-            " letter-spacing: 1px; }}".format(c=c, bg=bg, br=br, m=Theme.MONO_FONT))
+            f"QLabel#statusPill {{ color: {c}; background-color: {bg};"
+            f" border: 1px solid {br}; border-radius: 11px; padding: 4px 14px;"
+            f" font-family: '{Theme.MONO_FONT}'; font-size: 8pt; font-weight: bold;"
+            " letter-spacing: 1px; }")
         QtWidgets.QApplication.processEvents()
 
     def _show_of_preview(self, bgr):

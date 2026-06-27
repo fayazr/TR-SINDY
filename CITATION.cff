@@ -1,0 +1,26 @@
+cff-version: 1.2.0
+message: "If you use Turbulence Realm — SINDy in your research, please cite it as below."
+title: "Turbulence Realm — SINDy: Video-based fluid-flow analysis with sparse identification of nonlinear dynamics"
+type: software
+authors:
+  - given-names: Fayaz
+    family-names: Rasheed
+    orcid: "https://orcid.org/0000-0000-0000-0000"
+repository-code: "https://github.com/fayazr/TR-SINDY"
+url: "https://www.turbulencerealm.com"
+abstract: >-
+  A desktop application for video-based fluid-flow analysis. It extracts a
+  dense velocity field from a video using optical flow, fits a SINDy model,
+  predicts the reconstructed field, and provides visualisation, advanced
+  analysis, machine-learning models (PINN, FNO, DeepONet, ConvLSTM, VAE,
+  Autoencoder-SINDy) and flexible scientific export.
+keywords:
+  - fluid-dynamics
+  - optical-flow
+  - sindy
+  - sparse-identification
+  - pinn
+  - turbulence
+  - scientific-computing
+license: MIT
+version: "2.1.0"
