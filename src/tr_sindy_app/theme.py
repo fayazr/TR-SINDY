@@ -128,7 +128,7 @@ def stylesheet() -> str:
         font-size: 10pt;
     }}
     QWidget#contentRoot, QMainWindow {{
-        background-color: {t.BG_BASE};
+        background-color: transparent;
     }}
 
     /* ================================================================
@@ -174,11 +174,12 @@ def stylesheet() -> str:
     }}
 
     /* ================================================================
-       Group boxes — glassmorphism cards
+       Group boxes — glassmorphism cards (translucent so background
+       gradient + orbs show through; drop shadows applied in code)
        ================================================================ */
     QGroupBox {{
-        background-color: rgba(13, 20, 36, 0.85);
-        border: 1px solid {t.HAIRLINE};
+        background-color: rgba(13, 20, 36, 0.45);
+        border: 1px solid rgba(34, 211, 238, 0.25);
         border-radius: 14px; margin-top: 14px; padding: 12px 10px 10px 10px;
         font-weight: 600;
     }}
@@ -464,8 +465,7 @@ def stylesheet() -> str:
        Navigation rail — gradient background + active glow
        ================================================================ */
     QFrame#navRail {{
-        background-color: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-            stop:0 {t.BG_GRAD_TOP}, stop:1 {t.BG_BASE});
+        background-color: rgba(10, 16, 32, 0.60);
         border: none; border-right: 1px solid {t.HAIRLINE};
     }}
     QFrame#navBrand {{
@@ -505,10 +505,10 @@ def stylesheet() -> str:
     }}
 
     /* ================================================================
-       Controls panel
+       Controls panel — transparent (glass background shows through)
        ================================================================ */
     QWidget#controlsPanel {{
-        background-color: {t.SURFACE};
+        background-color: transparent;
         border-right: 1px solid {t.HAIRLINE};
     }}
 
@@ -525,8 +525,8 @@ def stylesheet() -> str:
        Pipeline stepper — glowing dots
        ================================================================ */
     QWidget#stepper {{
-        background-color: rgba(13, 20, 36, 0.80);
-        border: 1px solid {t.HAIRLINE};
+        background-color: rgba(13, 20, 36, 0.50);
+        border: 1px solid rgba(34, 211, 238, 0.15);
         border-radius: 14px;
     }}
     QLabel#stepperTitle {{
@@ -536,11 +536,11 @@ def stylesheet() -> str:
     QLabel#stepperBar {{ color: {t.HAIRLINE}; background: transparent; }}
 
     /* ================================================================
-       Card frame — glassmorphism
+       Card frame — glassmorphism (translucent)
        ================================================================ */
     QFrame#card {{
-        background-color: rgba(13, 20, 36, 0.75);
-        border: 1px solid {t.HAIRLINE};
+        background-color: rgba(13, 20, 36, 0.50);
+        border: 1px solid rgba(34, 211, 238, 0.15);
         border-radius: 14px;
     }}
 
@@ -552,7 +552,7 @@ def stylesheet() -> str:
     QSplitter::handle:vertical {{ height: 1px; }}
 
     /* ================================================================
-       Scroll area
+       Scroll area — transparent so glass background shows through
        ================================================================ */
     QScrollArea {{
         background-color: transparent; border: none;

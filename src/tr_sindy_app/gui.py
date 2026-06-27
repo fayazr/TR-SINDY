@@ -219,18 +219,33 @@ class FluidGui(QtWidgets.QMainWindow):
         self.history = project.ProcessingHistory()
         self._mmap_dir = "./velocity_mmaps"
 
-        # ---- central: nav rail + stacked pages ----
+        # ---- central: glass background + nav rail + stacked pages ----
         central = QtWidgets.QWidget()
         central.setObjectName("contentRoot")
         self.setCentralWidget(central)
-        outer = QtWidgets.QHBoxLayout(central)
+        # We need a container that holds the glass background behind everything
+        outer = QtWidgets.QGridLayout(central)
         outer.setContentsMargins(0, 0, 0, 0)
         outer.setSpacing(0)
 
-        outer.addWidget(self._build_nav_rail())
+        # Glass background (bottom layer — paints gradient + glowing orbs)
+        from .glass_background import GlassBackground
+        self._glass_bg = GlassBackground(central)
+        outer.addWidget(self._glass_bg, 0, 0, 1, 2)
+
+        # Content container (top layer — transparent so background shows through)
+        content_container = QtWidgets.QWidget()
+        content_container.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
+        content_layout = QtWidgets.QHBoxLayout(content_container)
+        content_layout.setContentsMargins(0, 0, 0, 0)
+        content_layout.setSpacing(0)
+
+        content_layout.addWidget(self._build_nav_rail())
 
         self.pages = QtWidgets.QStackedWidget()
-        outer.addWidget(self.pages, 1)
+        content_layout.addWidget(self.pages, 1)
+
+        outer.addWidget(content_container, 0, 0, 1, 2)
 
         self._build_setup_page()
         self._build_visualize_page()
@@ -440,12 +455,18 @@ class FluidGui(QtWidgets.QMainWindow):
         scroll.setFrameShape(QtWidgets.QFrame.Shape.NoFrame)
         scroll.setMinimumWidth(controls_min)
         scroll.setMaximumWidth(controls_max)
+        # Make the scroll area + viewport transparent so glass background shows through
+        scroll.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
+        scroll.viewport().setAutoFillBackground(False)
+        scroll.setStyleSheet("QScrollArea { background: transparent; }")
         split = QtWidgets.QSplitter(Qt.Orientation.Horizontal)
         split.addWidget(scroll)
         split.addWidget(content_widget)
         split.setStretchFactor(0, 0)
         split.setStretchFactor(1, 1)
         split.setHandleWidth(2)
+        # Make splitter transparent so glass background shows through
+        split.setAttribute(Qt.WidgetAttribute.WA_TranslucentBackground, True)
         # Give the controls column a comfortable default width
         split.setSizes([640, 800])
         return split
@@ -455,6 +476,19 @@ class FluidGui(QtWidgets.QMainWindow):
         w = QtWidgets.QWidget()
         w.setObjectName("controlsPanel")
         return w
+
+    def _apply_glass_effects(self, widget):
+        """Apply drop shadows to all groupboxes and cards in a widget tree.
+
+        This creates the depth that makes glassmorphism visible — without
+        shadows, translucent surfaces blend into the background.
+        """
+        from .glass_background import apply_drop_shadow
+        for child in widget.findChildren(QtWidgets.QGroupBox):
+            apply_drop_shadow(child, blur_radius=24, y_offset=6, alpha=100)
+        for child in widget.findChildren(QtWidgets.QFrame):
+            if child.objectName() == "card":
+                apply_drop_shadow(child, blur_radius=20, y_offset=4, alpha=80)
 
     # -----------------------------------------------------------------
     #  Setup page
@@ -642,7 +676,7 @@ class FluidGui(QtWidgets.QMainWindow):
         pv.addWidget(self.of_preview)
         ct.addWidget(preview_card, 1)
 
-        self.pages.addWidget(self._make_split_page(controls, content))
+        page = self._make_split_page(controls, content); self._apply_glass_effects(page); self.pages.addWidget(page)
 
     # -----------------------------------------------------------------
     #  Visualize page
@@ -716,7 +750,7 @@ class FluidGui(QtWidgets.QMainWindow):
         ct.addWidget(self.quiver_section, 1)
         self._figs = [self.quiver_fig]
 
-        self.pages.addWidget(self._make_split_page(controls, content))
+        page = self._make_split_page(controls, content); self._apply_glass_effects(page); self.pages.addWidget(page)
 
     def _mk_btn(self, label, grid, r, c, slot):
         b = QtWidgets.QPushButton(label)
@@ -909,7 +943,7 @@ class FluidGui(QtWidgets.QMainWindow):
         self._figs.append(self.ml_viz_fig)
 
         ct.addWidget(self.ml_tabs)
-        self.pages.addWidget(self._make_split_page(controls, content))
+        page = self._make_split_page(controls, content); self._apply_glass_effects(page); self.pages.addWidget(page)
 
         # state for ML predictions
         self.ml_pred = None  # dict: {u_pred, v_pred, p_pred, loss_history, model_name, actual_u, actual_v, n_frames, h, w}
@@ -1133,7 +1167,7 @@ class FluidGui(QtWidgets.QMainWindow):
         hint.setWordWrap(True)
         ct.addWidget(hint)
         ct.addStretch(1)
-        self.pages.addWidget(self._make_split_page(controls, content))
+        page = self._make_split_page(controls, content); self._apply_glass_effects(page); self.pages.addWidget(page)
 
     # =================================================================
     #  Pipeline: file / ROI
