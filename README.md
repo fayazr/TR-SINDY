@@ -1,31 +1,58 @@
 # Turbulence Realm — SINDy
 
 <p align="center">
+  <img src="logo.png" width="80" height="80" alt="Turbulence Realm logo">
+</p>
+
+<p align="center">
   <strong>Video-based fluid-flow analysis with Sparse Identification of Nonlinear Dynamics</strong>
 </p>
 
 <p align="center">
   <a href="https://github.com/fayazr/TR-SINDY/actions"><img src="https://github.com/fayazr/TR-SINDY/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
-  <a href="https://www.turbulencerealm.com"><img src="https://img.shields.io/badge/www-turbulencerealm.com-22D3EE.svg" alt="Website"></a>
+  <a href="https://www.turbulencerealm.com"><img src="https://img.shields.io/badge/www-turbulencerealm.com-a67c2a.svg" alt="Website"></a>
+  <a href="https://github.com/fayazr/TR-SINDY/releases"><img src="https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20Android-a67c2a.svg" alt="Platforms"></a>
 </p>
 
 ---
 
-A futuristic desktop application for **video-based fluid-flow analysis**. It
+A desktop **and** mobile application for **video-based fluid-flow analysis**. It
 extracts a dense velocity field from a video using optical flow, fits a
 **SINDy** (Sparse Identification of Nonlinear Dynamics) model, predicts the
 reconstructed field, and provides rich visualisation, advanced analysis,
 machine-learning models and flexible export.
 
+The app ships in two editions:
+
+| Edition | Platform | UI Framework | Target |
+|---------|----------|-------------|--------|
+| **Desktop** | Linux, Windows | PyQt6 | Full-featured analysis workstation |
+| **Mobile** | Android (arm64-v8a, armeabi-v7a) | Kivy | Touch-friendly on-site analysis |
+
+Both editions share the same gold/cream Turbulence Realm brand identity.
+
 ## Table of Contents
 
 - [Features](#features)
+- [Screenshots](#screenshots)
 - [Installation](#installation)
+  - [Desktop](#desktop-installation)
+  - [Mobile (Android)](#mobile-android-installation)
 - [Quick Start](#quick-start)
-- [Using the GUI](#using-the-gui)
+- [Using the Desktop GUI](#using-the-desktop-gui)
+  - [Setup Page](#1-setup-page)
+  - [Visualization Page](#2-visualization-page)
+  - [ML Models Page](#3-ml-models-page)
+  - [Export Page](#4-export-page)
+  - [Analysis Tools](#analysis-tools)
+  - [Keyboard Shortcuts](#keyboard-shortcuts)
+  - [Settings](#settings)
+- [Using the Mobile App](#using-the-mobile-app)
 - [Using the CLI](#using-the-cli)
-- [Building an Executable](#building-an-executable)
+- [Building from Source](#building-from-source)
+  - [Desktop Executable](#building-a-desktop-executable)
+  - [Android APK](#building-an-android-apk)
 - [Project Structure](#project-structure)
 - [Testing & Development](#testing--development)
 - [Citation](#citation)
@@ -33,39 +60,116 @@ machine-learning models and flexible export.
 
 ## Features
 
-- **Optical Flow**: Farneback (default), Lucas-Kanade, TV-L1, RAFT/PWC-Net
-  (deep learning), multi-scale pyramid, temporal smoothing, quality metrics.
-- **SINDy Modeling**: polynomial / Fourier / combined / custom libraries;
-  STLSQ / SR3 / FROLS / constrained optimizers; k-fold cross-validation;
-  model comparison; divergence-free option; time-delay embedding.
-- **Prediction**: batched SINDy prediction and smoothed field reconstruction.
-- **Analysis**: vorticity, strain rate, divergence, spatial/temporal spectra,
-  POD, DMD, turbulence statistics (TKE, Reynolds number), structure functions
-  with scaling exponents, isotropic energy spectrum with Kolmogorov fit,
-  velocity PDFs, comprehensive error metrics, region statistics.
-- **Machine Learning** (optional, requires torch): PINN for Navier-Stokes,
-  Autoencoder-SINDy, Fourier Neural Operator, DeepONet, ConvLSTM, VAE/beta-VAE,
-  ensemble & MC-dropout uncertainty, GAN synthesis, Granger causality.
-- **Data Quality**: outlier detection (z-score / modified z-score / IQR),
-  RBF/kriging interpolation, noise estimation, forward-backward consistency.
-- **Visualisation**: side-by-side actual vs SINDy quiver, contour, streamlines,
-  vorticity/strain fields, POD/DMD modes, spectra, animated heatmaps, custom
-  colormaps, data table view.
-- **Export**: CSV, HDF5, NetCDF, Parquet, JSON metadata (with full provenance),
-  image sequences, PDF report, MP4 quiver animation.
-- **Reproducibility**: provenance metadata (git commit, package versions,
-  config, seed, input SHA-256) embedded in every export; reproducible mode
-  seeds numpy/random/torch with deterministic algorithms.
-- **Project System**: save/load `.trsindy` projects (bundles memmaps),
-  parameter presets, recent files, processing history, auto-save/session
-  restore.
-- **UX**: futuristic dark/light theme with gradient accents, glassmorphism
-  surfaces, settings dialog, progress ETA, keyboard shortcuts, tooltips,
-  ROI undo/redo, in-app log widget.
+### Optical Flow
+- **Backends**: Farneback (default, robust dense), Lucas-Kanade (sparse, fast),
+  TV-L1 (needs opencv-contrib), RAFT / PWC-Net (deep learning, needs torch).
+- **Multi-scale pyramid**: Coarse-to-fine estimation for large motions.
+- **Temporal smoothing**: EMA (exponential moving average) or moving average
+  to reduce flicker between frames.
+- **Denoising**: Gaussian or Non-Local Means pre-denoise for cleaner flow.
+- **Quality metrics**: Forward-backward consistency error computed per frame.
+
+### SINDy Modeling
+- **Libraries**: polynomial, Fourier, combined (poly × Fourier), custom, trig.
+- **Optimizers**: STLSQ (default), SR3, FROLS, constrained SR3.
+- **Degree**: Polynomial degree 1–5.
+- **Threshold**: Sparsity threshold (0.001–1.0) — higher = sparser model.
+- **Divergence-free**: Enforce incompressibility (∇·u = 0).
+- **Cross-validation**: k-fold CV with error reporting.
+- **Model comparison**: Try multiple libraries/optimizers side-by-side.
+- **Time-delay embedding**: For systems with hidden variables.
+
+### Prediction
+- Batched SINDy prediction and smoothed field reconstruction.
+- Side-by-side actual vs predicted velocity comparison.
+
+### Analysis
+- **Vorticity**: Color-mapped vorticity field (ω = ∂v/∂x − ∂u/∂y).
+- **Strain rate**: Symmetric and antisymmetric strain components.
+- **Divergence**: ∇·u field for compressibility assessment.
+- **Spectra**: Spatial and temporal energy spectra.
+- **POD**: Proper Orthogonal Decomposition modes and energies.
+- **DMD**: Dynamic Mode Decomposition modes and growth rates.
+- **Turbulence statistics**: TKE, Reynolds number, structure functions with
+  scaling exponents, isotropic energy spectrum with Kolmogorov fit.
+- **Velocity PDFs**: Probability density functions of velocity components.
+- **Error metrics**: RMSE, MAE, R², relative error between actual and predicted.
+- **Region statistics**: Spatially-averaged flow quantities.
+
+### Machine Learning (optional, requires torch)
+- **PINN** — Physics-Informed Neural Network with Navier-Stokes residuals.
+- **Autoencoder-SINDy** — Compressed latent-space SINDy.
+- **FNO** — Fourier Neural Operator for flow prediction.
+- **DeepONet** — Deep Operator Network.
+- **ConvLSTM** — Recurrent convolutional model for temporal sequences.
+- **VAE / beta-VAE** — Variational Autoencoder for flow generation.
+- **Ensemble** — SINDy ensemble with uncertainty quantification.
+- **GAN** — Generative Adversarial Network for flow synthesis.
+- **Granger causality** — Causal analysis between flow variables.
+
+### Data Quality
+- **Outlier detection**: z-score, modified z-score, IQR methods.
+- **Interpolation**: RBF (radial basis function), kriging (needs pykrige).
+- **Noise estimation**: Estimated noise level in the velocity field.
+- **Forward-backward consistency**: Detects unreliable flow regions.
+
+### Visualisation
+- Side-by-side actual vs SINDy quiver plots.
+- Velocity magnitude contours and streamline plots.
+- Vorticity and strain-rate color-mapped fields.
+- POD/DMD mode visualizations.
+- Energy spectra plots.
+- Animated heatmaps (play through frames).
+- Custom matplotlib colormaps.
+- Data table view (tabular velocity data).
+
+### Export
+- **CSV** — Velocity field as comma-separated values.
+- **HDF5** — Hierarchical data format (needs `h5py`).
+- **NetCDF** — Network Common Data Form.
+- **Parquet** — Columnar storage (needs `pyarrow`).
+- **JSON metadata** — Full metadata with provenance (git commit, versions,
+  config, seed, SHA-256).
+- **Image sequence** — PNG frames of the visualization.
+- **PDF report** — Comprehensive PDF with metrics and figures.
+- **MP4 animation** — Quiver animation video (needs FFmpeg).
+
+### Reproducibility
+- Provenance metadata (git commit, package versions, config, seed, input
+  SHA-256) embedded in every export.
+- Reproducible mode seeds numpy/random/torch with deterministic algorithms.
+
+### Project System
+- Save/load `.trsindy` projects (bundles memmaps).
+- Parameter presets (built-in + user-saved).
+- Recent files list.
+- Processing history.
+- Auto-save and session restore on next launch.
+
+### UX
+- Gold/cream Turbulence Realm brand theme (dark and light variants).
+- Glassmorphism surfaces with subtle translucency.
+- Gradient accents and glowing focus states.
+- Settings dialog with persistent preferences.
+- Progress ETA in the status bar.
+- Keyboard shortcuts and tooltips throughout.
+- ROI undo/redo.
+- In-app log widget.
+
+## Screenshots
+
+The desktop app features a navigation rail on the left with four main pages
+(Setup, Visualize, ML Models, Export), a glassmorphism background with drifting
+glow orbs, and gold/cream branding matching the [product website](https://www.turbulencerealm.com).
+
+The mobile app provides a touch-friendly tabbed interface (Setup, Flow, SINDy,
+Viz) with touch-drag ROI drawing and on-device optical flow processing.
 
 ## Installation
 
-### From source (recommended)
+### Desktop Installation
+
+#### From source (recommended)
 
 ```bash
 git clone https://github.com/fayazr/TR-SINDY.git
@@ -73,13 +177,13 @@ cd TR-SINDY
 pip install -e ".[ml,export]"
 ```
 
-### Minimal install (no ML / advanced export)
+#### Minimal install (no ML / advanced export)
 
 ```bash
 pip install -e .
 ```
 
-### Optional dependency groups
+#### Optional dependency groups
 
 | Group | Packages | Purpose |
 |-------|----------|---------|
@@ -92,13 +196,26 @@ pip install -e .
 > All optional features degrade gracefully: the app runs without them and
 > shows a clear message when a feature needs an optional dependency.
 
-### System requirements
+#### System requirements
 
 - Python 3.9+
 - FFmpeg (only required for MP4 animation export)
 - A display (GUI mode) or headless (CLI mode)
 
+### Mobile (Android) Installation
+
+#### Pre-built APK
+
+Download the latest APK from the [Releases page](https://github.com/fayazr/TR-SINDY/releases)
+and install it on your Android device (API 24+, i.e. Android 7.0+).
+
+#### Build the APK yourself
+
+See [Building an Android APK](#building-an-android-apk) below.
+
 ## Quick Start
+
+### Desktop
 
 ```bash
 # Launch the GUI
@@ -113,105 +230,159 @@ tr-sindy-cli process video.mp4 \
     --export-dir ./out --formats csv,hdf5,pdf
 ```
 
-## Using the GUI
+### Mobile
 
-The GUI has four main pages, accessible from the navigation rail on the left:
+1. Install the APK on your Android device.
+2. Open the app — you'll see four tabs: **Setup**, **Flow**, **SINDy**, **Viz**.
+3. On the **Setup** tab, tap **Browse Video…** and select a video.
+4. Switch to the **Flow** tab and drag your finger to draw a rectangle over
+   the region of interest.
+5. Back on **Setup**, tap **① Process Optical Flow**.
+6. When complete, tap **② Run SINDy** to discover the governing equations.
+7. Switch to the **Viz** tab to view the velocity field (quiver / magnitude /
+   vorticity).
+
+## Using the Desktop GUI
+
+The GUI has four main pages, accessible from the navigation rail on the left.
+The brand logo appears at the top of the rail, followed by the app title
+"Turbulence Realm" and subtitle "· SINDy".
 
 ### 1. Setup Page
 
 This is where you load a video, calibrate the scale, configure parameters, and
 run the processing pipeline.
 
-**Step-by-step workflow:**
+#### Step-by-step workflow
 
-1. **Open a video** — Click **Browse…** in the *Video Source* card or use
-   **File → Open Video** (Ctrl+O). Supported formats: MP4, AVI, MOV, MKV
-   (anything OpenCV can decode).
+**Step 1 — Open a video**
 
-2. **Select ROI & Calibrate** — Click **Select ROI & Calibrate**. A dialog
-   opens showing the first frame:
-   - **Draw a rectangle** over the region of interest (the area where you want
-     to measure flow).
-   - **Draw a calibration line** of known physical length. Enter the real-world
-     length in meters.
-   - Use **Ctrl+Z / Ctrl+Y** to undo/redo if you make a mistake.
-   - Click **OK** when done. The calibration readout updates to show
-     meters-per-pixel.
+Click **Browse…** in the *Video Source* card or use **File → Open Video**
+(Ctrl+O). Supported formats: MP4, AVI, MOV, MKV (anything OpenCV can decode).
 
-3. **Configure Optical Flow** — Choose a backend and options:
-   - **Backend**: `farneback` (default, robust), `lucas_kanade` (sparse,
-     fast), `tvl1` (needs opencv-contrib), `raft` / `pwcnet` (deep learning,
-     needs torch).
-   - **Smoothing**: `none`, `ema` (exponential moving average), `moving`
-     (moving average) — reduces flicker between frames.
-   - **EMA α**: Smoothing factor (0–1). Higher = more responsive, lower =
-     smoother.
-   - **Multi-scale pyramid**: Coarse-to-fine estimation for large motions.
-   - **Gaussian / NLM denoise**: Pre-denoise frames for cleaner flow.
-   - **Quality metrics**: Compute forward-backward consistency error per frame.
+**Step 2 — Select ROI & Calibrate**
 
-4. **Configure SINDy** — Choose library and optimizer:
-   - **Library**: `polynomial`, `fourier`, `combined` (poly × Fourier),
-     `custom`, `trig`.
-   - **Degree**: Polynomial degree (1–5).
-   - **Optimizer**: `stlsq` (default), `sr3`, `frols`, `constrained_sr3`.
-   - **Threshold**: Sparsity threshold (0.001–1.0). Higher = sparser model.
-   - **Divergence-free**: Enforce incompressibility (∇·u = 0).
+Click **Select ROI & Calibrate**. A dialog opens showing the first frame:
 
-5. **Run the pipeline** — Click the buttons in order:
-   - **① Process Optical Flow** — Extracts the velocity field. A live HSV +
-     quiver preview appears. Progress and ETA are shown in the status bar.
-   - **② Run SINDy Modeling** — Fits the sparse dynamics model. Optionally
-     use **Equation** to view the discovered equation, **Cross-validate** for
-     k-fold CV, or **Compare** to try multiple libraries.
-   - **③ Run SINDy Prediction** — Reconstructs the predicted velocity field.
+- **Draw a rectangle** over the region of interest (the area where you want
+  to measure flow).
+- **Draw a calibration line** of known physical length. Enter the real-world
+  length in meters.
+- Use **Ctrl+Z / Ctrl+Y** to undo/redo if you make a mistake.
+- Click **OK** when done. The calibration readout updates to show
+  meters-per-pixel.
 
-6. **Apply a preset** (optional) — Use **Presets → List / Apply Preset…** to
-   load saved parameter sets, or **Save Current as Preset…** to save your
-   current configuration.
+**Step 3 — Configure Optical Flow**
+
+Choose a backend and options in the *Optical Flow Configuration* card:
+
+| Option | Values | Description |
+|--------|--------|-------------|
+| Backend | `farneback`, `lucas_kanade`, `tvl1`, `raft`, `pwcnet` | Flow algorithm |
+| Smoothing | `none`, `ema`, `moving` | Temporal smoothing |
+| EMA α | 0–1 | Smoothing factor (higher = more responsive) |
+| Multi-scale pyramid | on/off | Coarse-to-fine for large motions |
+| Gaussian denoise | on/off | Pre-denoise with Gaussian filter |
+| NLM denoise | on/off | Pre-denoise with Non-Local Means |
+| Quality metrics | on/off | Forward-backward consistency error |
+
+**Step 4 — Configure SINDy**
+
+Choose library and optimizer in the *SINDy Configuration* card:
+
+| Option | Values | Description |
+|--------|--------|-------------|
+| Library | `polynomial`, `fourier`, `combined`, `custom`, `trig` | Candidate function library |
+| Degree | 1–5 | Polynomial degree |
+| Optimizer | `stlsq`, `sr3`, `frols`, `constrained_sr3` | Sparse regression optimizer |
+| Threshold | 0.001–1.0 | Sparsity threshold (higher = sparser) |
+| Divergence-free | on/off | Enforce ∇·u = 0 |
+
+**Step 5 — Run the pipeline**
+
+Click the buttons in order:
+
+1. **① Process Optical Flow** — Extracts the velocity field. A live HSV +
+   quiver preview appears. Progress and ETA are shown in the status bar.
+2. **② Run SINDy Modeling** — Fits the sparse dynamics model. The discovered
+   equation is displayed. Optionally use **Cross-validate** for k-fold CV, or
+   **Compare** to try multiple libraries.
+3. **③ Run SINDy Prediction** — Reconstructs the predicted velocity field.
+
+**Step 6 — Apply a preset (optional)**
+
+Use **Presets → List / Apply Preset…** to load saved parameter sets, or
+**Save Current as Preset…** to save your current configuration.
 
 ### 2. Visualization Page
 
-After running the pipeline, visualize the results:
+After running the pipeline, visualize the results. The page has a control
+panel on the left and a matplotlib canvas on the right.
 
 - **Quiver plot** — Side-by-side actual vs SINDy-predicted velocity arrows.
+  Use the frame slider to scrub through time.
 - **Contour / streamlines** — Velocity magnitude contours or streamline plots.
 - **Vorticity / strain** — Color-mapped vorticity and strain-rate fields.
 - **Animated heatmap** — Play through frames as an animated velocity heatmap.
-- **Custom colormap** — Choose from matplotlib colormaps.
-- **Data table** — Tabular view of the velocity data.
+  Press the play button to animate.
+- **Custom colormap** — Choose from matplotlib colormaps (viridis, plasma,
+  magma, inferno, cividis, etc.).
+- **Data table** — Tabular view of the velocity data (u, v, magnitude per
+  grid point).
 
 ### 3. ML Models Page
 
-Train machine-learning models (requires `pip install -e ".[ml]"`):
+Train machine-learning models (requires `pip install -e ".[ml]"`).
 
-- **PINN** — Physics-Informed Neural Network with Navier-Stokes residuals.
-- **Autoencoder-SINDy** — Compressed latent-space SINDy.
-- **FNO** — Fourier Neural Operator for flow prediction.
-- **DeepONet** — Deep Operator Network.
-- **ConvLSTM** — Recurrent convolutional model for temporal sequences.
-- **VAE / beta-VAE** — Variational Autoencoder for flow generation.
-- **Ensemble** — SINDy ensemble with uncertainty quantification.
-- **GAN** — Generative Adversarial Network for flow synthesis.
-- **Causal** — Granger causality analysis.
+Select a model from the dropdown, adjust hyperparameters in the parameter
+panel, and click **Train**. Training logs appear in the in-app log widget.
 
-Select a model, adjust hyperparameters in the parameter panel, and click
-**Train**. Training logs appear in the in-app log widget. Trained models can
-be exported to TorchScript / ONNX.
+| Model | Description | Key Hyperparameters |
+|-------|-------------|---------------------|
+| PINN | Physics-Informed NN with Navier-Stokes residuals | layers, epochs, lr |
+| Autoencoder-SINDy | Compressed latent-space SINDy | latent_dim, epochs |
+| FNO | Fourier Neural Operator | modes, width, epochs |
+| DeepONet | Deep Operator Network | depth, width, epochs |
+| ConvLSTM | Recurrent conv model for temporal sequences | hidden_dim, layers |
+| VAE / beta-VAE | Variational Autoencoder for flow generation | latent_dim, beta |
+| Ensemble | SINDy ensemble with uncertainty quantification | n_models |
+| GAN | Generative Adversarial Network for flow synthesis | epochs, lr |
+| Causal | Granger causality analysis | max_lag |
+
+Trained models can be exported to TorchScript / ONNX from the Export page.
 
 ### 4. Export Page
 
-Export results in multiple formats:
+Export results in multiple formats. Check the formats you want and click
+**Export**:
 
-- **CSV** — Velocity field as comma-separated values.
-- **HDF5** — Hierarchical data format (needs `h5py`).
-- **NetCDF** — Network Common Data Form.
-- **Parquet** — Columnar storage (needs `pyarrow`).
-- **JSON metadata** — Full metadata with provenance (git commit, versions,
-  config, seed, SHA-256).
-- **Image sequence** — PNG frames of the visualization.
-- **PDF report** — Comprehensive PDF with metrics and figures.
-- **MP4 animation** — Quiver animation video (needs FFmpeg).
+| Format | Needs | Description |
+|--------|------|-------------|
+| CSV | — | Velocity field as comma-separated values |
+| HDF5 | `h5py` | Hierarchical data format |
+| NetCDF | — | Network Common Data Form |
+| Parquet | `pyarrow` | Columnar storage |
+| JSON metadata | — | Full metadata with provenance |
+| Image sequence | — | PNG frames of the visualization |
+| PDF report | — | Comprehensive PDF with metrics and figures |
+| MP4 animation | FFmpeg | Quiver animation video |
+
+All exports include provenance metadata (git commit, package versions, config,
+seed, input SHA-256) for full reproducibility.
+
+### Analysis Tools
+
+Accessible from the Visualization page, these tools provide deeper insight:
+
+- **POD (Proper Orthogonal Decomposition)** — Extract dominant coherent
+  structures. View mode shapes and energy spectrum.
+- **DMD (Dynamic Mode Decomposition)** — Identify spatiotemporal patterns
+  with growth rates and frequencies.
+- **Spectra** — Spatial and temporal energy spectra with Kolmogorov fit.
+- **Turbulence statistics** — TKE, Reynolds number, structure functions,
+  scaling exponents.
+- **Velocity PDFs** — Probability density functions of velocity components.
+- **Error metrics** — RMSE, MAE, R² between actual and predicted fields.
 
 ### Keyboard Shortcuts
 
@@ -231,12 +402,54 @@ Export results in multiple formats:
 
 - **Mmap directory** — Where velocity memmaps are stored.
 - **Default backend** — Default optical-flow backend.
-- **Theme** — Dark or light.
+- **Theme** — Dark or light (both use the gold/cream brand palette).
 - **Recent files count** — Number of recent projects to remember.
 - **FFmpeg path** — Custom FFmpeg executable path (leave empty for auto-detect).
 - **Auto-save** — Enable session restore on next launch.
 
 Settings are persisted via QSettings and survive restarts.
+
+### About Dialog
+
+**Help → About** shows the Turbulence Realm brand logo, app version, a short
+description, and a link to [www.turbulencerealm.com](https://www.turbulencerealm.com).
+
+## Using the Mobile App
+
+The mobile app (Android) provides a touch-friendly interface for on-site
+video analysis. It has four tabs accessible from the top:
+
+### Setup Tab
+
+1. **Browse Video…** — Opens a file picker to select a video (MP4, AVI, MOV,
+   MKV).
+2. **Calibration** — Enter calibration in pixels and meters to set the
+   spatial scale.
+3. **Backend** — Choose `farneback` (default) or `lucas_kanade`.
+4. **Library degree** — Polynomial degree for SINDy (1–4).
+5. **Threshold** — Sparsity threshold slider (0.001–1.0).
+6. **① Process Optical Flow** — Extracts the velocity field (processes up to
+   60 frames). Progress bar shows completion.
+7. **② Run SINDy** — Fits the sparse dynamics model and displays the
+   discovered equations.
+
+### Flow Tab
+
+- Shows the first frame of the loaded video.
+- **Touch and drag** to draw a rectangle over the region of interest (ROI).
+- The ROI is used for optical flow processing.
+
+### SINDy Tab
+
+- Displays the discovered equations after running SINDy.
+- Shows model info: number of terms, degree, threshold.
+
+### Viz Tab
+
+- **Mode selector**: `quiver` (velocity arrows), `magnitude` (color-mapped
+  speed), `vorticity` (color-mapped rotation).
+- Renders the velocity field on a Kivy canvas.
+- Uses the Turbulence Realm gold/cream color palette.
 
 ## Using the CLI
 
@@ -332,19 +545,21 @@ tr-sindy-cli --version
 tr-sindy-cli --help
 ```
 
-## Building an Executable
+## Building from Source
+
+### Building a Desktop Executable
 
 TR-SINDY can be packaged as a standalone executable using PyInstaller. This
 creates a distributable that doesn't require Python to be installed.
 
-### Prerequisites
+#### Prerequisites
 
 ```bash
 pip install pyinstaller
 pip install -e ".[ml,export]"  # install all optional deps you want bundled
 ```
 
-### Build with PyInstaller
+#### Build with PyInstaller
 
 ```bash
 # One-folder build (faster startup, easier to debug)
@@ -354,11 +569,9 @@ pyinstaller TurbulenceRealmSINDy.spec
 python scripts/build.py
 ```
 
-The executable will be in `dist/TurbulenceRealmSINDy/`.
+The executable will be in `build/dist/TurbulenceRealmSINDy/`.
 
-### Build script
-
-A convenience build script is provided:
+#### Build script options
 
 ```bash
 # Default build (one-folder, no ML)
@@ -371,25 +584,95 @@ python scripts/build.py --with-ml
 python scripts/build.py --onefile
 ```
 
-### Custom icon
+#### Custom logo / icon
 
-Place `logo.ico` (Windows) or `logo.png` in the project root before building
-to set the executable icon.
+The `logo.png` file (a gold rounded square with white flowing curve paths —
+the Turbulence Realm brand mark) is automatically bundled and used as:
+- The window icon (title bar / taskbar)
+- The navigation rail brand mark (top-left corner)
+- The About dialog logo
 
-### Bundling FFmpeg
+To use a custom icon, replace `logo.png` in the project root before building.
 
-To bundle FFmpeg for animation export, place `ffmpeg.exe` (Windows) or
-`ffmpeg` (Linux/macOS) in the project root. The build script will include it
-automatically.
+#### Bundling FFmpeg
 
-### Nuitka alternative
+To bundle FFmpeg for animation export, place `ffmpeg` in the project root.
+The build script will include it automatically.
+
+#### Nuitka alternative
 
 For a potentially faster binary, Nuitka is also supported:
 
 ```bash
 pip install nuitka
-
 python scripts/build.py --nuitka
+```
+
+### Building an Android APK
+
+The mobile app is built using [Buildozer](https://github.com/kivy/buildozer)
+with [python-for-android](https://github.com/kivy/python-for-android).
+
+#### Prerequisites
+
+- Linux or WSL (Buildozer does not run natively on Windows)
+- Java JDK 17
+- Android SDK + NDK (Buildozer can auto-download these)
+- Python 3.9+
+
+#### Build steps
+
+```bash
+cd mobile
+
+# Install buildozer
+pip install buildozer
+
+# Build the debug APK
+buildozer android debug
+```
+
+The APK will be in `mobile/bin/` as
+`trsindy-2.2.0-arm64-v8a_armeabi-v7a-debug.apk`.
+
+#### Buildozer spec
+
+The build configuration is in `mobile/buildozer.spec`. Key settings:
+
+| Setting | Value |
+|---------|-------|
+| `title` | Turbulence Realm SINDy |
+| `package.name` | trsindy |
+| `package.domain` | com.turbulencerealm |
+| `version` | 2.2.0 |
+| `requirements` | python3,kivy,numpy,opencv |
+| `orientation` | landscape |
+| `minsdk` | 24 (Android 7.0) |
+| `arch` | arm64-v8a, armeabi-v7a |
+
+#### Mobile app structure
+
+```
+mobile/
+├── buildozer.spec              # Buildozer configuration
+├── main.py                     # Entry point (loads tr_sindy_mobile)
+├── icon.png                    # App icon (Turbulence Realm logo)
+├── presplash.png               # Splash screen (logo + app name)
+├── README.md                   # Mobile-specific docs
+└── tr_sindy_mobile/
+    ├── __init__.py
+    ├── main.py                 # Kivy app + UI (KV string + widgets)
+    ├── flow_lite.py            # Lightweight optical flow (OpenCV)
+    └── sindy_lite.py           # Lightweight SINDy (pure numpy STLSQ)
+```
+
+#### Installing the APK
+
+```bash
+# Enable USB debugging on your phone, then:
+adb install mobile/bin/trsindy-2.2.0-arm64-v8a_armeabi-v7a-debug.apk
+
+# Or transfer the APK file to your phone and tap to install
 ```
 
 ## Project Structure
@@ -397,11 +680,12 @@ python scripts/build.py --nuitka
 ```
 TR-SINDY/
 ├── src/
-│   └── tr_sindy_app/           # v2.2 modular package
+│   └── tr_sindy_app/           # Desktop app package
 │       ├── __init__.py         # version, public API
 │       ├── app.py              # entry point + splash screen
 │       ├── gui.py              # main window + pages
-│       ├── theme.py            # dark/light theme, stylesheet
+│       ├── theme.py            # gold/cream dark/light theme, stylesheet
+│       ├── glass_background.py # animated glassmorphism background
 │       ├── roi_dialog.py       # ROI/calibration with undo/redo
 │       ├── optical_flow.py     # Farneback/LK/TV-L1/RAFT + multiscale
 │       ├── sindy_core.py       # libraries, optimizers, CV, comparison
@@ -414,7 +698,17 @@ TR-SINDY/
 │       ├── settings_dialog.py  # settings dialog (QSettings)
 │       ├── _logging.py         # logging config + Qt log handler
 │       └── _provenance.py      # reproducibility metadata collection
-├── tests/                      # pytest test suite (72 tests)
+├── mobile/                     # Android mobile app
+│   ├── buildozer.spec          # Buildozer / APK build config
+│   ├── main.py                 # Mobile entry point
+│   ├── icon.png                # App icon (brand logo)
+│   ├── presplash.png           # Splash screen
+│   └── tr_sindy_mobile/        # Mobile app package (Kivy)
+│       ├── main.py             # Kivy UI + widgets
+│       ├── flow_lite.py        # Lightweight optical flow
+│       └── sindy_lite.py       # Lightweight SINDy
+├── logo.png                    # Turbulence Realm brand mark
+├── tests/                      # pytest test suite
 ├── scripts/
 │   └── build.py                # executable build script
 ├── archive/
@@ -457,7 +751,7 @@ and a GUI smoke test.
 
 ## Citation
 
-If you use TR-SINDY in your research, please cite it:
+If you use TR-SINDy in your research, please cite it:
 
 ```bibtex
 @software{rasheed_trsindy,

@@ -25,7 +25,7 @@ source.include_patterns = tr_sindy_mobile/*,main.py
 version = 2.2.0
 
 # (list) Application requirements
-# Core: kivy, numpy, opencv
+# Core: kivy, numpy, opencv (for video I/O and optical flow)
 requirements = python3,kivy,numpy,opencv
 
 # (str) Custom application folder
@@ -42,7 +42,7 @@ icon.filename = %(source.dir)s/icon.png
 orientation = landscape
 
 # (list) List of service to declare
-services =
+#services =
 
 # (str) Android logcat filter
 android.logcat_filters = *:S python:D
@@ -59,11 +59,20 @@ android.api = 31
 # (int) Minimum API required
 android.minapi = 24
 
-# (int) Android NDK version
-android.ndk = 23b
+# (str) Android NDK version
+android.ndk = 25b
 
 # (bool) Use private storage
 android.private_storage = True
+
+# (list) Android architectures to build for
+android.archs = arm64-v8a, armeabi-v7a
+
+# (bool) Auto-accept SDK licenses
+android.accept_sdk_license = True
+
+# (bool) Fullscreen app
+fullscreen = False
 
 # (str) Android NDK path (leave empty for auto)
 # android.ndk_path =
@@ -72,13 +81,13 @@ android.private_storage = True
 # android.sdk_path =
 
 # (str) Python-for-Android branch
-p4a.branch = master
+p4a.branch = v2024.01.21
 
 # (str) Python-for-Android url
 # p4a.url =
 
 # (str) Python version
-python.version = 3.10
+python.version = 3.11
 
 # ---
 # Build configuration

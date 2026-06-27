@@ -34,6 +34,23 @@ from .theme import Theme, apply_matplotlib_theme, stylesheet
 
 log = get_logger(__name__)
 
+
+def _find_logo():
+    """Locate logo.png in both dev and frozen (PyInstaller) environments."""
+    import sys
+    candidates = []
+    if getattr(sys, 'frozen', False):
+        # PyInstaller one-folder: _MEIPASS is _internal/
+        candidates.append(os.path.join(getattr(sys, '_MEIPASS', ''), 'logo.png'))
+        candidates.append(os.path.join(os.path.dirname(sys.argv[0]), 'logo.png'))
+    candidates.append(os.path.join(os.path.dirname(__file__), "..", "..", "logo.png"))
+    candidates.append("logo.png")
+    for p in candidates:
+        if os.path.exists(p):
+            return p
+    return None
+
+
 # Heavy modules (pysindy ~1.7s, pandas ~1s) — imported lazily on first use
 # to keep application startup fast.  Accessed via self._sindy_core etc.
 _sindy_core = None
@@ -282,10 +299,21 @@ class FluidGui(QtWidgets.QMainWindow):
         bv = QtWidgets.QVBoxLayout(brand)
         bv.setContentsMargins(20, 22, 20, 20)
         bv.setSpacing(3)
-        mark = QtWidgets.QLabel("⬡")
-        mark.setStyleSheet(
-            f"color: {Theme.ACCENT}; font-size: 26pt; background: transparent;"
-            f" font-weight: bold;")
+        # Brand mark logo (from logo.png — the Turbulence Realm mark)
+        logo_path = _find_logo()
+        if logo_path:
+            mark = QtWidgets.QLabel()
+            pix = QtGui.QPixmap(logo_path)
+            mark.setPixmap(pix.scaled(
+                34, 34, Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation))
+            mark.setFixedSize(34, 34)
+            mark.setStyleSheet("background: transparent;")
+        else:
+            mark = QtWidgets.QLabel("⬡")
+            mark.setStyleSheet(
+                f"color: {Theme.ACCENT}; font-size: 26pt; background: transparent;"
+                f" font-weight: bold;")
         bv.addWidget(mark)
         title = QtWidgets.QLabel(
             f"Turbulence <span style='color:{Theme.ACCENT}'>Realm</span>")
@@ -2462,14 +2490,26 @@ class FluidGui(QtWidgets.QMainWindow):
         from . import __version__ as _v
         dlg = QtWidgets.QDialog(self)
         dlg.setWindowTitle("About — Turbulence Realm SINDy")
-        dlg.setFixedSize(460, 480)
+        dlg.setFixedSize(460, 520)
         v = QtWidgets.QVBoxLayout(dlg)
         v.setContentsMargins(24, 24, 24, 24)
         v.setSpacing(8)
-        mark = QtWidgets.QLabel("⬡")
-        mark.setStyleSheet(
-            f"color: {Theme.ACCENT}; font-size: 64pt; font-weight: bold;")
-        mark.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        # Brand mark logo (from logo.png — the Turbulence Realm mark)
+        logo_path = _find_logo()
+        if logo_path:
+            mark = QtWidgets.QLabel()
+            pix = QtGui.QPixmap(logo_path)
+            mark.setPixmap(pix.scaled(
+                72, 72, Qt.AspectRatioMode.KeepAspectRatio,
+                Qt.TransformationMode.SmoothTransformation))
+            mark.setFixedSize(72, 72)
+            mark.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            mark.setStyleSheet("background: transparent;")
+        else:
+            mark = QtWidgets.QLabel("⬡")
+            mark.setStyleSheet(
+                f"color: {Theme.ACCENT}; font-size: 64pt; font-weight: bold;")
+            mark.setAlignment(Qt.AlignmentFlag.AlignCenter)
         v.addWidget(mark)
         t = QtWidgets.QLabel("Turbulence Realm — SINDy")
         t.setStyleSheet(

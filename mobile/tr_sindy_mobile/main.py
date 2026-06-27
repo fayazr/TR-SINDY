@@ -49,7 +49,7 @@ KV = """
     orientation: 'vertical'
     canvas.before:
         Color:
-            rgba: 0.04, 0.06, 0.11, 1
+            rgba: 0.965, 0.953, 0.925, 1
         Rectangle:
             pos: self.pos
             size: self.size
@@ -59,7 +59,7 @@ KV = """
         height: '56dp'
         canvas.before:
             Color:
-                rgba: 0.08, 0.12, 0.22, 1
+                rgba: 0.937, 0.918, 0.878, 1
             Rectangle:
                 pos: self.pos
                 size: self.size
@@ -67,13 +67,13 @@ KV = """
             text: 'Turbulence Realm — SINDy'
             font_size: '18sp'
             bold: True
-            color: 0.13, 0.82, 0.93, 1
+            color: 0.651, 0.486, 0.165, 1
             size_hint_x: 0.6
         Label:
             id: status_label
             text: 'Ready'
             font_size: '12sp'
-            color: 0.5, 0.6, 0.7, 1
+            color: 0.353, 0.376, 0.420, 1
             size_hint_x: 0.4
             halign: 'right'
 
@@ -114,11 +114,11 @@ KV = """
         Button:
             text: 'Browse Video…'
             on_press: root.browse_video()
-            background_color: 0.13, 0.82, 0.93, 1
+            background_color: 0.651, 0.486, 0.165, 1
         Label:
             id: video_label
             text: 'No video selected'
-            color: 0.7, 0.8, 0.9, 1
+            color: 0.353, 0.376, 0.420, 1
             font_size: '12sp'
 
     BoxLayout:
@@ -127,7 +127,7 @@ KV = """
         Label:
             text: 'Calib (px):'
             size_hint_x: 0.3
-            color: 0.7, 0.8, 0.9, 1
+            color: 0.353, 0.376, 0.420, 1
         TextInput:
             id: calib_px
             text: '200'
@@ -136,7 +136,7 @@ KV = """
         Label:
             text: 'Calib (m):'
             size_hint_x: 0.3
-            color: 0.7, 0.8, 0.9, 1
+            color: 0.353, 0.376, 0.420, 1
         TextInput:
             id: calib_m
             text: '0.1'
@@ -149,7 +149,7 @@ KV = """
         Label:
             text: 'Backend:'
             size_hint_x: 0.3
-            color: 0.7, 0.8, 0.9, 1
+            color: 0.353, 0.376, 0.420, 1
         Spinner:
             id: backend_spinner
             text: 'farneback'
@@ -162,7 +162,7 @@ KV = """
         Label:
             text: 'Library degree:'
             size_hint_x: 0.4
-            color: 0.7, 0.8, 0.9, 1
+            color: 0.353, 0.376, 0.420, 1
         Spinner:
             id: degree_spinner
             text: '3'
@@ -171,7 +171,7 @@ KV = """
         Label:
             text: 'Threshold:'
             size_hint_x: 0.3
-            color: 0.7, 0.8, 0.9, 1
+            color: 0.353, 0.376, 0.420, 1
 
     Slider:
         id: threshold_slider
@@ -184,14 +184,14 @@ KV = """
     Label:
         id: threshold_label
         text: '0.070'
-        color: 0.13, 0.82, 0.93, 1
+        color: 0.651, 0.486, 0.165, 1
         font_size: '12sp'
         size_hint_y: None
         height: '20dp'
 
     Label:
         text: 'Draw ROI on the Flow tab after loading video'
-        color: 0.4, 0.5, 0.6, 1
+        color: 0.353, 0.376, 0.420, 1
         font_size: '11sp'
         size_hint_y: None
         height: '24dp'
@@ -205,7 +205,7 @@ KV = """
         size_hint_y: None
         height: '56dp'
         font_size: '16sp'
-        background_color: 0.13, 0.82, 0.93, 1
+        background_color: 0.651, 0.486, 0.165, 1
         on_press: root.run_optical_flow()
         disabled: not app.video_path
 
@@ -214,7 +214,7 @@ KV = """
         size_hint_y: None
         height: '56dp'
         font_size: '16sp'
-        background_color: 0.51, 0.55, 0.98, 1
+        background_color: 0.478, 0.353, 0.114, 1
         on_press: root.run_sindy()
         disabled: not app.flow_result
 
@@ -230,13 +230,13 @@ KV = """
     orientation: 'vertical'
     canvas.before:
         Color:
-            rgba: 0.02, 0.03, 0.06, 1
+            rgba: 0.937, 0.918, 0.878, 1
         Rectangle:
             pos: self.pos
             size: self.size
     Label:
         text: 'Touch and drag to draw ROI rectangle'
-        color: 0.4, 0.5, 0.6, 1
+        color: 0.353, 0.376, 0.420, 1
         font_size: '11sp'
         size_hint_y: None
         height: '24dp'
@@ -255,7 +255,7 @@ KV = """
             text: 'Run SINDy to see discovered equations'
             markup: True
             font_size: '14sp'
-            color: 0.13, 0.82, 0.93, 1
+            color: 0.651, 0.486, 0.165, 1
             size_hint_y: None
             height: self.texture_size[1]
             text_size: self.width, None
@@ -267,7 +267,7 @@ KV = """
         Label:
             id: sindy_info
             text: ''
-            color: 0.5, 0.6, 0.7, 1
+            color: 0.353, 0.376, 0.420, 1
             font_size: '11sp'
 
 
@@ -275,7 +275,7 @@ KV = """
     orientation: 'vertical'
     canvas.before:
         Color:
-            rgba: 0.02, 0.03, 0.06, 1
+            rgba: 0.937, 0.918, 0.878, 1
         Rectangle:
             pos: self.pos
             size: self.size
@@ -348,7 +348,7 @@ class ROIDrawingWidget(Widget):
         if self._touch_start and self._touch_end:
             x0 = min(self._touch_start[0], self._touch_end[0])
             y0 = min(self._touch_start[1], self._touch_end[1])
-            x1 = max(self._touch_start[0], self._touch_end[1])
+            x1 = max(self._touch_start[0], self._touch_end[0])
             y1 = max(self._touch_start[1], self._touch_end[1])
             # Convert to normalized coords relative to widget
             self.roi = (
@@ -363,7 +363,7 @@ class ROIDrawingWidget(Widget):
         self._update_rect()
         if self._touch_start and self._touch_end:
             with self.canvas:
-                Color(0.13, 0.82, 0.93, 0.8)
+                Color(0.651, 0.486, 0.165, 0.8)
                 x0 = min(self._touch_start[0], self._touch_end[0])
                 y0 = min(self._touch_start[1], self._touch_end[1])
                 x1 = max(self._touch_start[0], self._touch_end[0])
@@ -404,7 +404,7 @@ class FlowCanvasWidget(Widget):
         self.canvas.clear()
         if self.u is None or self.v is None:
             with self.canvas:
-                Color(0.3, 0.4, 0.5, 1)
+                Color(0.290, 0.310, 0.353, 1)
                 Rectangle(pos=self.pos, size=self.size)
             return
         u, v = self.u, self.v
@@ -469,9 +469,9 @@ class FlowCanvasWidget(Widget):
                         arrow_len = step * 1.5
                         ex = px + du * arrow_len
                         ey = py - dv * arrow_len
-                        # Color by magnitude
+                        # Color by magnitude (gold gradient)
                         m = mag[y, x] / max_mag
-                        Color(0.13 + m * 0.5, 0.82, 0.93, 0.9)
+                        Color(0.651 + m * 0.125, 0.486 + m * 0.114, 0.165 + m * 0.062, 0.9)
                         Line(points=[px, py, ex, ey], width=1.5)
                         # Arrowhead dot
                         Color(1, 1, 1, 0.8)

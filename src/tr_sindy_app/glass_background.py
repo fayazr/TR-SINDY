@@ -79,9 +79,9 @@ class GlassBackground(QtWidgets.QWidget):
 
         # Base gradient (top-left → bottom-right)
         grad = QLinearGradient(0, 0, w, h)
-        grad.setColorAt(0.0, QColor("#0E1A2E"))
+        grad.setColorAt(0.0, QColor(Theme.BG_GRAD_TOP))
         grad.setColorAt(0.5, QColor(Theme.BG_BASE))
-        grad.setColorAt(1.0, QColor("#02040A"))
+        grad.setColorAt(1.0, QColor(Theme.SURFACE))
         pr.fillRect(0, 0, w, h, QBrush(grad))
 
         # Glowing orbs (slowly drifting)

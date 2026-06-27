@@ -1,15 +1,15 @@
 """Theme tokens, Qt stylesheet and matplotlib theming.
 
-Supports a dark (default "Flux Reactor") and a light theme, switchable at
-runtime via :func:`apply_theme`.
+Supports a dark and a light theme, switchable at runtime via
+:func:`apply_theme`.
 
-The v2.2 redesign introduces a modern aesthetic with:
-  * Deeper, richer dark palette with blue-violet gradient accents
+The v2.3 redesign aligns the app with the Turbulence Realm brand:
+  * Gold / cream palette matching the product website
+  * DM Sans (UI) + Cormorant Garamond (display) typography
   * Glassmorphism-style surfaces with subtle translucency
   * Glowing focus states and hover transitions
   * Animated gradient progress bars
   * Modernized navigation rail with active-state glow
-  * Refined typography with tighter letter-spacing
 """
 
 from __future__ import annotations
@@ -18,75 +18,75 @@ import matplotlib
 
 
 # ---------------------------------------------------------------------
-#  Palettes
+#  Palettes — aligned with the Turbulence Realm brand (gold / cream)
 # ---------------------------------------------------------------------
 class _Dark:
-    BG_BASE      = "#060912"
-    BG_GRAD_TOP  = "#0A1020"
-    SURFACE      = "#0D1424"
-    SURFACE_HI   = "#141E33"
-    SURFACE_GLOW = "#1A2740"
-    HAIRLINE     = "#1E2A42"
-    BORDER_HOVER = "#345880"
-    TEXT         = "#EDF4FF"
-    TEXT_MUTED   = "#8BA1C0"
-    TEXT_FAINT   = "#4A5C78"
-    ACCENT       = "#22D3EE"
-    ACCENT_2     = "#818CF8"
-    ACCENT_DEEP  = "#0E7490"
+    BG_BASE      = "#1a1d24"
+    BG_GRAD_TOP  = "#2c3038"
+    SURFACE      = "#23272f"
+    SURFACE_HI   = "#2c3038"
+    SURFACE_GLOW = "#3a414c"
+    HAIRLINE     = "#3a3f48"
+    BORDER_HOVER = "#7a5a1d"
+    TEXT         = "#f6f3ec"
+    TEXT_MUTED   = "#b8b0a0"
+    TEXT_FAINT   = "#7a7468"
+    ACCENT       = "#c6993a"
+    ACCENT_2     = "#a67c2a"
+    ACCENT_DEEP  = "#7a5a1d"
     MAGENTA      = "#F472B6"
-    AMBER        = "#FBBF24"
+    AMBER        = "#c6993a"
     DANGER       = "#F87171"
     GOOD         = "#34D399"
-    # Gradient endpoints for buttons / accents
-    GRAD_ACCENT_1 = "#22D3EE"
-    GRAD_ACCENT_2 = "#818CF8"
-    GRAD_VIOLET_1 = "#818CF8"
-    GRAD_VIOLET_2 = "#C084FC"
+    # Gradient endpoints for buttons / accents (gold-light → gold-dim)
+    GRAD_ACCENT_1 = "#c6993a"
+    GRAD_ACCENT_2 = "#7a5a1d"
+    GRAD_VIOLET_1 = "#c6993a"
+    GRAD_VIOLET_2 = "#a67c2a"
     # Glow colors (rgba)
-    GLOW_ACCENT   = "rgba(34, 211, 238, 0.35)"
-    GLOW_VIOLET   = "rgba(129, 140, 248, 0.30)"
+    GLOW_ACCENT   = "rgba(166, 124, 42, 0.35)"
+    GLOW_VIOLET   = "rgba(166, 124, 42, 0.25)"
     GLOW_GOOD     = "rgba(52, 211, 153, 0.30)"
-    GLOW_AMBER    = "rgba(251, 191, 36, 0.30)"
+    GLOW_AMBER    = "rgba(198, 153, 58, 0.30)"
     GLOW_DANGER   = "rgba(248, 113, 113, 0.30)"
-    UI_FONT   = "Inter"
+    UI_FONT   = "DM Sans"
     MONO_FONT = "JetBrains Mono"
-    BGR_ACCENT  = (255, 229, 70)
-    BGR_AMBER   = (75, 194, 255)
+    BGR_ACCENT  = (166, 124, 42)
+    BGR_AMBER   = (198, 153, 58)
     BGR_MAGENTA = (216, 79, 255)
 
 
 class _Light:
-    BG_BASE      = "#F0F4FA"
-    BG_GRAD_TOP  = "#E4EAF3"
-    SURFACE      = "#FFFFFF"
-    SURFACE_HI   = "#EDF2F8"
-    SURFACE_GLOW = "#E0E7F0"
-    HAIRLINE     = "#C8D3E4"
-    BORDER_HOVER = "#8FA8C8"
-    TEXT         = "#0B1526"
-    TEXT_MUTED   = "#3D5273"
-    TEXT_FAINT   = "#7A8DA8"
-    ACCENT       = "#0891B2"
-    ACCENT_2     = "#6366F1"
-    ACCENT_DEEP  = "#0E7490"
+    BG_BASE      = "#f6f3ec"
+    BG_GRAD_TOP  = "#efeae0"
+    SURFACE      = "#ffffff"
+    SURFACE_HI   = "#efeae0"
+    SURFACE_GLOW = "#e9e2d3"
+    HAIRLINE     = "#e9e2d3"
+    BORDER_HOVER = "#a67c2a"
+    TEXT         = "#1a1d24"
+    TEXT_MUTED   = "#5a606b"
+    TEXT_FAINT   = "#8b94a3"
+    ACCENT       = "#a67c2a"
+    ACCENT_2     = "#7a5a1d"
+    ACCENT_DEEP  = "#7a5a1d"
     MAGENTA      = "#DB2777"
-    AMBER        = "#D97706"
+    AMBER        = "#c6993a"
     DANGER       = "#DC2626"
     GOOD         = "#059669"
-    GRAD_ACCENT_1 = "#0891B2"
-    GRAD_ACCENT_2 = "#6366F1"
-    GRAD_VIOLET_1 = "#6366F1"
-    GRAD_VIOLET_2 = "#A855F7"
-    GLOW_ACCENT   = "rgba(8, 145, 178, 0.20)"
-    GLOW_VIOLET   = "rgba(99, 102, 241, 0.18)"
+    GRAD_ACCENT_1 = "#c6993a"
+    GRAD_ACCENT_2 = "#7a5a1d"
+    GRAD_VIOLET_1 = "#c6993a"
+    GRAD_VIOLET_2 = "#a67c2a"
+    GLOW_ACCENT   = "rgba(166, 124, 42, 0.18)"
+    GLOW_VIOLET   = "rgba(166, 124, 42, 0.12)"
     GLOW_GOOD     = "rgba(5, 150, 105, 0.18)"
-    GLOW_AMBER    = "rgba(217, 119, 6, 0.18)"
+    GLOW_AMBER    = "rgba(198, 153, 58, 0.18)"
     GLOW_DANGER   = "rgba(220, 38, 38, 0.18)"
-    UI_FONT   = "Inter"
+    UI_FONT   = "DM Sans"
     MONO_FONT = "JetBrains Mono"
-    BGR_ACCENT  = (184, 143, 10)
-    BGR_AMBER   = (26, 131, 201)
+    BGR_ACCENT  = (166, 124, 42)
+    BGR_AMBER   = (198, 153, 58)
     BGR_MAGENTA = (174, 31, 200)
 
 
@@ -148,7 +148,7 @@ def stylesheet() -> str:
     QLabel#statusPill {{
         font-family: '{t.MONO_FONT}', monospace; font-size: 8pt; font-weight: bold;
         color: {t.ACCENT}; background-color: {t.GLOW_ACCENT};
-        border: 1px solid rgba(34, 211, 238, 0.40); border-radius: 11px;
+        border: 1px solid rgba(166, 124, 42, 0.40); border-radius: 11px;
         padding: 4px 14px; letter-spacing: 1px;
     }}
 
@@ -178,8 +178,8 @@ def stylesheet() -> str:
        gradient + orbs show through; drop shadows applied in code)
        ================================================================ */
     QGroupBox {{
-        background-color: rgba(13, 20, 36, 0.45);
-        border: 1px solid rgba(34, 211, 238, 0.25);
+        background-color: rgba(35, 39, 47, 0.45);
+        border: 1px solid rgba(166, 124, 42, 0.25);
         border-radius: 14px; margin-top: 14px; padding: 12px 10px 10px 10px;
         font-weight: 600;
     }}
@@ -212,7 +212,7 @@ def stylesheet() -> str:
     QPushButton[variant="primary"] {{
         background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
             stop:0 {t.GRAD_ACCENT_1}, stop:1 {t.GRAD_ACCENT_2});
-        color: #04142B; border: 1px solid transparent; font-weight: 800;
+        color: #ffffff; border: 1px solid transparent; font-weight: 800;
         border-radius: 10px;
     }}
     QPushButton[variant="primary"]:hover {{
@@ -228,15 +228,15 @@ def stylesheet() -> str:
         border: 1px solid {t.HAIRLINE};
     }}
 
-    /* Violet variant — translucent with glow border */
+    /* Gold-dim variant — translucent with glow border */
     QPushButton[variant="violet"] {{
-        background-color: rgba(129, 140, 248, 0.14); color: #C6B8FF;
-        border: 1px solid rgba(129, 140, 248, 0.45); font-weight: 700;
+        background-color: rgba(166, 124, 42, 0.14); color: #c6993a;
+        border: 1px solid rgba(166, 124, 42, 0.45); font-weight: 700;
         border-radius: 10px;
     }}
     QPushButton[variant="violet"]:hover {{
-        background-color: rgba(129, 140, 248, 0.24);
-        border: 1px solid rgba(129, 140, 248, 0.65);
+        background-color: rgba(166, 124, 42, 0.24);
+        border: 1px solid rgba(166, 124, 42, 0.65);
     }}
     QPushButton[variant="violet"]:disabled {{
         background-color: {t.SURFACE}; color: {t.TEXT_FAINT};
@@ -255,7 +255,7 @@ def stylesheet() -> str:
     }}
     QLabel#stepGuide {{
         font-family: '{t.MONO_FONT}', monospace; font-size: 9pt; color: {t.TEXT_MUTED};
-        background-color: rgba(6, 9, 18, 0.6); border: 1px solid {t.HAIRLINE};
+        background-color: rgba(26, 29, 36, 0.6); border: 1px solid {t.HAIRLINE};
         border-radius: 12px; padding: 16px 18px;
     }}
 
@@ -266,7 +266,7 @@ def stylesheet() -> str:
         border: 1px solid {t.HAIRLINE}; border-radius: 8px; padding: 9px 12px;
         font-family: '{t.MONO_FONT}', monospace; font-size: 10pt; color: {t.TEXT};
         background-color: {t.BG_BASE}; selection-background-color: {t.ACCENT};
-        selection-color: #04142B;
+        selection-color: #ffffff;
     }}
     QLineEdit:focus {{
         border: 1px solid {t.ACCENT};
@@ -276,7 +276,7 @@ def stylesheet() -> str:
     QPlainTextEdit, QTextEdit, QTableWidget, QTableView {{
         background-color: {t.BG_BASE}; color: {t.TEXT}; border: 1px solid {t.HAIRLINE};
         border-radius: 10px; font-family: '{t.MONO_FONT}', monospace; font-size: 10pt;
-        selection-background-color: {t.ACCENT}; selection-color: #04142B;
+        selection-background-color: {t.ACCENT}; selection-color: #ffffff;
     }}
     QTableWidget::item {{ padding: 4px 8px; }}
     QHeaderView::section {{
@@ -308,7 +308,7 @@ def stylesheet() -> str:
     }}
     QComboBox QAbstractItemView {{
         background-color: {t.SURFACE_HI}; color: {t.TEXT};
-        selection-background-color: {t.ACCENT}; selection-color: #04142B;
+        selection-background-color: {t.ACCENT}; selection-color: #ffffff;
         border: 1px solid {t.HAIRLINE}; border-radius: 8px;
         padding: 4px; outline: none;
     }}
@@ -415,7 +415,7 @@ def stylesheet() -> str:
     QMenu::item:selected {{
         background-color: qlineargradient(x1:0, y1:0, x2:1, y2:0,
             stop:0 {t.GRAD_ACCENT_1}, stop:1 {t.GRAD_ACCENT_2});
-        color: #04142B; font-weight: 600;
+        color: #ffffff; font-weight: 600;
     }}
     QMenu::separator {{ height: 1px; background: {t.HAIRLINE}; margin: 4px 10px; }}
 
@@ -465,7 +465,7 @@ def stylesheet() -> str:
        Navigation rail — gradient background + active glow
        ================================================================ */
     QFrame#navRail {{
-        background-color: rgba(10, 16, 32, 0.60);
+        background-color: rgba(44, 48, 56, 0.60);
         border: none; border-right: 1px solid {t.HAIRLINE};
     }}
     QFrame#navBrand {{
@@ -525,8 +525,8 @@ def stylesheet() -> str:
        Pipeline stepper — glowing dots
        ================================================================ */
     QWidget#stepper {{
-        background-color: rgba(13, 20, 36, 0.50);
-        border: 1px solid rgba(34, 211, 238, 0.15);
+        background-color: rgba(35, 39, 47, 0.50);
+        border: 1px solid rgba(166, 124, 42, 0.15);
         border-radius: 14px;
     }}
     QLabel#stepperTitle {{
@@ -539,8 +539,8 @@ def stylesheet() -> str:
        Card frame — glassmorphism (translucent)
        ================================================================ */
     QFrame#card {{
-        background-color: rgba(13, 20, 36, 0.50);
-        border: 1px solid rgba(34, 211, 238, 0.15);
+        background-color: rgba(35, 39, 47, 0.50);
+        border: 1px solid rgba(166, 124, 42, 0.15);
         border-radius: 14px;
     }}
 
@@ -577,8 +577,8 @@ def apply_matplotlib_theme():
     fam = "DejaVu Sans"
     try:
         avail = {f.name for f in font_manager.fontManager.ttflist}
-        if "Inter" in avail:
-            fam = "Inter"
+        if "DM Sans" in avail:
+            fam = "DM Sans"
     except Exception:
         pass
     matplotlib.rcParams.update({
