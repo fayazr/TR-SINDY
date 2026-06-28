@@ -12,35 +12,27 @@
   <a href="https://github.com/fayazr/TR-SINDY/actions"><img src="https://github.com/fayazr/TR-SINDY/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
   <a href="https://www.turbulencerealm.com"><img src="https://img.shields.io/badge/www-turbulencerealm.com-a67c2a.svg" alt="Website"></a>
-  <a href="https://github.com/fayazr/TR-SINDY/releases"><img src="https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20Android-a67c2a.svg" alt="Platforms"></a>
+  <a href="https://github.com/fayazr/TR-SINDY/releases"><img src="https://img.shields.io/badge/platform-Linux%20%7C%20Windows-a67c2a.svg" alt="Platforms"></a>
 </p>
 
 ---
 
-A desktop **and** mobile application for **video-based fluid-flow analysis**. It
+A desktop application for **video-based fluid-flow analysis**. It
 extracts a dense velocity field from a video using optical flow, fits a
 **SINDy** (Sparse Identification of Nonlinear Dynamics) model, predicts the
 reconstructed field, and provides rich visualisation, advanced analysis,
 machine-learning models and flexible export.
 
-The app ships in two editions:
-
-| Edition | Platform | UI Framework | Target |
-|---------|----------|-------------|--------|
-| **Desktop** | Linux, Windows | PyQt6 | Full-featured analysis workstation |
-| **Mobile** | Android (arm64-v8a, armeabi-v7a) | Kivy | Touch-friendly on-site analysis |
-
-Both editions share the same gold/cream Turbulence Realm brand identity.
+The app features a gold/cream Turbulence Realm brand identity matching the
+[product website](https://www.turbulencerealm.com).
 
 ## Table of Contents
 
 - [Features](#features)
 - [Screenshots](#screenshots)
 - [Installation](#installation)
-  - [Desktop](#desktop-installation)
-  - [Mobile (Android)](#mobile-android-installation)
 - [Quick Start](#quick-start)
-- [Using the Desktop GUI](#using-the-desktop-gui)
+- [Using the GUI](#using-the-desktop-gui)
   - [Setup Page](#1-setup-page)
   - [Visualization Page](#2-visualization-page)
   - [ML Models Page](#3-ml-models-page)
@@ -48,11 +40,9 @@ Both editions share the same gold/cream Turbulence Realm brand identity.
   - [Analysis Tools](#analysis-tools)
   - [Keyboard Shortcuts](#keyboard-shortcuts)
   - [Settings](#settings)
-- [Using the Mobile App](#using-the-mobile-app)
 - [Using the CLI](#using-the-cli)
 - [Building from Source](#building-from-source)
   - [Desktop Executable](#building-a-desktop-executable)
-  - [Android APK](#building-an-android-apk)
 - [Project Structure](#project-structure)
 - [Testing & Development](#testing--development)
 - [Citation](#citation)
@@ -158,18 +148,13 @@ Both editions share the same gold/cream Turbulence Realm brand identity.
 
 ## Screenshots
 
-The desktop app features a navigation rail on the left with four main pages
+The app features a navigation rail on the left with four main pages
 (Setup, Visualize, ML Models, Export), a glassmorphism background with drifting
 glow orbs, and gold/cream branding matching the [product website](https://www.turbulencerealm.com).
 
-The mobile app provides a touch-friendly tabbed interface (Setup, Flow, SINDy,
-Viz) with touch-drag ROI drawing and on-device optical flow processing.
-
 ## Installation
 
-### Desktop Installation
-
-#### From source (recommended)
+### From source (recommended)
 
 ```bash
 git clone https://github.com/fayazr/TR-SINDY.git
@@ -177,13 +162,13 @@ cd TR-SINDY
 pip install -e ".[ml,export]"
 ```
 
-#### Minimal install (no ML / advanced export)
+### Minimal install (no ML / advanced export)
 
 ```bash
 pip install -e .
 ```
 
-#### Optional dependency groups
+### Optional dependency groups
 
 | Group | Packages | Purpose |
 |-------|----------|---------|
@@ -196,26 +181,13 @@ pip install -e .
 > All optional features degrade gracefully: the app runs without them and
 > shows a clear message when a feature needs an optional dependency.
 
-#### System requirements
+### System requirements
 
 - Python 3.9+
 - FFmpeg (only required for MP4 animation export)
 - A display (GUI mode) or headless (CLI mode)
 
-### Mobile (Android) Installation
-
-#### Pre-built APK
-
-Download the latest APK from the [Releases page](https://github.com/fayazr/TR-SINDY/releases)
-and install it on your Android device (API 24+, i.e. Android 7.0+).
-
-#### Build the APK yourself
-
-See [Building an Android APK](#building-an-android-apk) below.
-
 ## Quick Start
-
-### Desktop
 
 ```bash
 # Launch the GUI
@@ -230,19 +202,7 @@ tr-sindy-cli process video.mp4 \
     --export-dir ./out --formats csv,hdf5,pdf
 ```
 
-### Mobile
-
-1. Install the APK on your Android device.
-2. Open the app — you'll see four tabs: **Setup**, **Flow**, **SINDy**, **Viz**.
-3. On the **Setup** tab, tap **Browse Video…** and select a video.
-4. Switch to the **Flow** tab and drag your finger to draw a rectangle over
-   the region of interest.
-5. Back on **Setup**, tap **① Process Optical Flow**.
-6. When complete, tap **② Run SINDy** to discover the governing equations.
-7. Switch to the **Viz** tab to view the velocity field (quiver / magnitude /
-   vorticity).
-
-## Using the Desktop GUI
+## Using the GUI
 
 The GUI has four main pages, accessible from the navigation rail on the left.
 The brand logo appears at the top of the rail, followed by the app title
@@ -414,43 +374,6 @@ Settings are persisted via QSettings and survive restarts.
 **Help → About** shows the Turbulence Realm brand logo, app version, a short
 description, and a link to [www.turbulencerealm.com](https://www.turbulencerealm.com).
 
-## Using the Mobile App
-
-The mobile app (Android) provides a touch-friendly interface for on-site
-video analysis. It has four tabs accessible from the top:
-
-### Setup Tab
-
-1. **Browse Video…** — Opens a file picker to select a video (MP4, AVI, MOV,
-   MKV).
-2. **Calibration** — Enter calibration in pixels and meters to set the
-   spatial scale.
-3. **Backend** — Choose `farneback` (default) or `lucas_kanade`.
-4. **Library degree** — Polynomial degree for SINDy (1–4).
-5. **Threshold** — Sparsity threshold slider (0.001–1.0).
-6. **① Process Optical Flow** — Extracts the velocity field (processes up to
-   60 frames). Progress bar shows completion.
-7. **② Run SINDy** — Fits the sparse dynamics model and displays the
-   discovered equations.
-
-### Flow Tab
-
-- Shows the first frame of the loaded video.
-- **Touch and drag** to draw a rectangle over the region of interest (ROI).
-- The ROI is used for optical flow processing.
-
-### SINDy Tab
-
-- Displays the discovered equations after running SINDy.
-- Shows model info: number of terms, degree, threshold.
-
-### Viz Tab
-
-- **Mode selector**: `quiver` (velocity arrows), `magnitude` (color-mapped
-  speed), `vorticity` (color-mapped rotation).
-- Renders the velocity field on a Kivy canvas.
-- Uses the Turbulence Realm gold/cream color palette.
-
 ## Using the CLI
 
 The CLI supports batch processing and preset management:
@@ -608,73 +531,6 @@ pip install nuitka
 python scripts/build.py --nuitka
 ```
 
-### Building an Android APK
-
-The mobile app is built using [Buildozer](https://github.com/kivy/buildozer)
-with [python-for-android](https://github.com/kivy/python-for-android).
-
-#### Prerequisites
-
-- Linux or WSL (Buildozer does not run natively on Windows)
-- Java JDK 17
-- Android SDK + NDK (Buildozer can auto-download these)
-- Python 3.9+
-
-#### Build steps
-
-```bash
-cd mobile
-
-# Install buildozer
-pip install buildozer
-
-# Build the debug APK
-buildozer android debug
-```
-
-The APK will be in `mobile/bin/` as
-`trsindy-2.2.0-arm64-v8a_armeabi-v7a-debug.apk`.
-
-#### Buildozer spec
-
-The build configuration is in `mobile/buildozer.spec`. Key settings:
-
-| Setting | Value |
-|---------|-------|
-| `title` | Turbulence Realm SINDy |
-| `package.name` | trsindy |
-| `package.domain` | com.turbulencerealm |
-| `version` | 2.2.0 |
-| `requirements` | python3,kivy,numpy,opencv |
-| `orientation` | landscape |
-| `minsdk` | 24 (Android 7.0) |
-| `arch` | arm64-v8a, armeabi-v7a |
-
-#### Mobile app structure
-
-```
-mobile/
-├── buildozer.spec              # Buildozer configuration
-├── main.py                     # Entry point (loads tr_sindy_mobile)
-├── icon.png                    # App icon (Turbulence Realm logo)
-├── presplash.png               # Splash screen (logo + app name)
-├── README.md                   # Mobile-specific docs
-└── tr_sindy_mobile/
-    ├── __init__.py
-    ├── main.py                 # Kivy app + UI (KV string + widgets)
-    ├── flow_lite.py            # Lightweight optical flow (OpenCV)
-    └── sindy_lite.py           # Lightweight SINDy (pure numpy STLSQ)
-```
-
-#### Installing the APK
-
-```bash
-# Enable USB debugging on your phone, then:
-adb install mobile/bin/trsindy-2.2.0-arm64-v8a_armeabi-v7a-debug.apk
-
-# Or transfer the APK file to your phone and tap to install
-```
-
 ## Project Structure
 
 ```
@@ -698,15 +554,6 @@ TR-SINDY/
 │       ├── settings_dialog.py  # settings dialog (QSettings)
 │       ├── _logging.py         # logging config + Qt log handler
 │       └── _provenance.py      # reproducibility metadata collection
-├── mobile/                     # Android mobile app
-│   ├── buildozer.spec          # Buildozer / APK build config
-│   ├── main.py                 # Mobile entry point
-│   ├── icon.png                # App icon (brand logo)
-│   ├── presplash.png           # Splash screen
-│   └── tr_sindy_mobile/        # Mobile app package (Kivy)
-│       ├── main.py             # Kivy UI + widgets
-│       ├── flow_lite.py        # Lightweight optical flow
-│       └── sindy_lite.py       # Lightweight SINDy
 ├── logo.png                    # Turbulence Realm brand mark
 ├── tests/                      # pytest test suite
 ├── scripts/

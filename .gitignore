@@ -9,10 +9,6 @@ __pycache__/
 .eggs/
 *.egg
 
-# Mobile / Android build artifacts
-mobile/.buildozer/
-mobile/bin/
-
 # Screenshots / temp files
 1.png
 *.tmp
