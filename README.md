@@ -531,6 +531,42 @@ pip install nuitka
 python scripts/build.py --nuitka
 ```
 
+### Building a Windows Installer (Inno Setup)
+
+To create a professional Windows setup wizard (with disclaimer, install
+location selection, Start Menu shortcuts, and uninstaller):
+
+#### Prerequisites
+
+- Windows (or use the GitHub Actions CI workflow which does this automatically)
+- [Inno Setup](https://jrsoftware.org/isdl.php) installed
+- A PyInstaller build already in `build/dist/TurbulenceRealmSINDy/`
+
+#### Build the installer
+
+```bash
+# First, build the executable with PyInstaller
+pyinstaller TurbulenceRealmSINDy.spec
+
+# Then, compile the installer
+iscc TurbulenceRealmSINDy.iss
+```
+
+The installer will be in `installer/TurbulenceRealmSINDy-2.2.0-Setup.exe`.
+
+#### Installer features
+
+- **Disclaimer page**: Shows the no-liability disclaimer before installation
+- **Install location**: User-selectable (defaults to Program Files)
+- **Start Menu shortcut**: Creates a program group with app + uninstall links
+- **Optional desktop icon**: User can opt in during install
+- **Add/Remove Programs**: Registered in Windows Programs and Features
+- **Uninstaller**: Fully removes the app and all files
+- **Launch on finish**: Option to start the app after installation
+
+The installer configuration is in `TurbulenceRealmSINDy.iss` and the
+disclaimer text is in `DISCLAIMER.txt`.
+
 ## Project Structure
 
 ```
@@ -555,15 +591,20 @@ TR-SINDY/
 │       ├── _logging.py         # logging config + Qt log handler
 │       └── _provenance.py      # reproducibility metadata collection
 ├── logo.png                    # Turbulence Realm brand mark
+├── logo.ico                    # Windows icon (for installer)
+├── DISCLAIMER.txt              # No-liability disclaimer (shown in installer)
 ├── tests/                      # pytest test suite
 ├── scripts/
 │   └── build.py                # executable build script
 ├── archive/
 │   └── TR-SINDY-Final.py       # original v1.0 reference
-├── .github/workflows/ci.yml    # CI: ruff + pytest + GUI smoke test
+├── .github/workflows/
+│   ├── ci.yml                  # CI: ruff + pytest + GUI smoke test
+│   └── build-release.yml       # Build Windows installer + Linux executable
 ├── run.py                      # launcher script
 ├── pyproject.toml              # package metadata + tool config
 ├── TurbulenceRealmSINDy.spec   # PyInstaller spec
+├── TurbulenceRealmSINDy.iss    # Inno Setup script (Windows installer)
 ├── requirements.txt
 ├── ROADMAP.md                  # full feature status matrix
 ├── CHANGELOG.md                # version history

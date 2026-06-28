@@ -33,11 +33,24 @@ jobs:
           build\dist\TurbulenceRealmSINDy\TurbulenceRealmSINDy.exe --help 2>$null || $true
           Write-Host "Build artifact created successfully"
 
-      - name: Upload Windows artifact
+      - name: Install Inno Setup
+        run: choco install innosetup -y --no-progress
+
+      - name: Create Windows installer
+        run: iscc TurbulenceRealmSINDy.iss
+
+      - name: Upload Windows portable artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TurbulenceRealmSINDy-windows
+          name: TurbulenceRealmSINDy-windows-portable
           path: build/dist/TurbulenceRealmSINDy/
+          if-no-files-found: error
+
+      - name: Upload Windows installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TurbulenceRealmSINDy-windows-installer
+          path: installer/TurbulenceRealmSINDy-2.2.0-Setup.exe
           if-no-files-found: error
 
   build-linux:
