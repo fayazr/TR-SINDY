@@ -1,0 +1,19 @@
+Package: turbulencerealm-sindy
+Version: 2.2.0
+Section: science
+Priority: optional
+Architecture: amd64
+Depends: libegl1, libgl1, libglib2.0-0
+Maintainer: Fayaz Rasheed <https://www.turbulencerealm.com>
+Description: Turbulence Realm — SINDy
+ Video-based fluid-flow analysis with Sparse Identification
+ of Nonlinear Dynamics. Extracts velocity fields from video
+ using optical flow, fits SINDy models, and provides rich
+ visualisation, analysis, and export.
+ .
+ Features:
+  * Optical flow (Farneback, Lucas-Kanade, TV-L1, RAFT)
+  * SINDy modeling (polynomial, Fourier, combined libraries)
+  * Analysis (vorticity, POD, DMD, spectra, turbulence stats)
+  * Machine learning (PINN, FNO, DeepONet, ConvLSTM, VAE, GAN)
+  * Export (CSV, HDF5, NetCDF, Parquet, PDF, MP4)

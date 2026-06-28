@@ -1,0 +1,8 @@
+[Desktop Entry]
+Type=Application
+Name=Turbulence Realm SINDy
+Comment=Video-based fluid-flow analysis with SINDy
+Exec=/opt/TurbulenceRealmSINDy/TurbulenceRealmSINDy
+Icon=turbulencerealm-sindy
+Terminal=false
+Categories=Science;Physics;DataVisualization;

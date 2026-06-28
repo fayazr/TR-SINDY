@@ -65,7 +65,7 @@ jobs:
       - name: Install system dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y libegl1 libgl1 libglib2.0-0
+          sudo apt-get install -y libegl1 libgl1 libglib2.0-0 makeself
 
       - name: Install Python dependencies
         run: |
@@ -81,9 +81,29 @@ jobs:
           QT_QPA_PLATFORM=offscreen timeout 15 build/dist/TurbulenceRealmSINDy/TurbulenceRealmSINDy || true
           echo "Build artifact created successfully"
 
-      - name: Upload Linux artifact
+      - name: Create Linux installer (Makeself)
+        run: ./scripts/make_linux_installer.sh
+
+      - name: Create .deb package
+        run: ./scripts/make_deb.sh
+
+      - name: Upload Linux portable artifact
         uses: actions/upload-artifact@v4
         with:
-          name: TurbulenceRealmSINDy-linux
+          name: TurbulenceRealmSINDy-linux-portable
           path: build/dist/TurbulenceRealmSINDy/
+          if-no-files-found: error
+
+      - name: Upload Linux installer artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TurbulenceRealmSINDy-linux-installer
+          path: installer/TurbulenceRealmSINDy-2.2.0-Linux-Installer.run
+          if-no-files-found: error
+
+      - name: Upload Linux .deb artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TurbulenceRealmSINDy-linux-deb
+          path: installer/TurbulenceRealmSINDy-2.2.0-amd64.deb
           if-no-files-found: error

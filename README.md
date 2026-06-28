@@ -567,6 +567,76 @@ The installer will be in `installer/TurbulenceRealmSINDy-2.2.0-Setup.exe`.
 The installer configuration is in `TurbulenceRealmSINDy.iss` and the
 disclaimer text is in `DISCLAIMER.txt`.
 
+### Building a Linux Installer (Makeself)
+
+To create a self-extracting interactive installer for Linux (with disclaimer,
+install location selection, desktop/menu shortcuts, and uninstaller):
+
+#### Prerequisites
+
+- Linux (or use the GitHub Actions CI workflow which does this automatically)
+- `makeself` installed (`sudo apt install makeself`)
+- A PyInstaller build already in `build/dist/TurbulenceRealmSINDy/`
+
+#### Build the installer
+
+```bash
+# First, build the executable with PyInstaller
+pyinstaller TurbulenceRealmSINDy.spec
+
+# Then, create the self-extracting installer
+./scripts/make_linux_installer.sh
+```
+
+The installer will be in `installer/TurbulenceRealmSINDy-2.2.0-Linux-Installer.run`.
+
+#### Installer features
+
+- **Disclaimer prompt**: Shows the no-liability disclaimer (requires acceptance)
+- **Install location**: User-selectable (defaults to `/opt/TurbulenceRealmSINDy`)
+- **Application menu entry**: Creates a `.desktop` file for the app menu
+- **Optional desktop shortcut**: User can opt in during install
+- **Uninstaller**: Run `/opt/TurbulenceRealmSINDy/install.sh --uninstall`
+- **Launch on finish**: Option to start the app after installation
+
+The install script is in `linux/install.sh` and the Makeself wrapper is in
+`scripts/make_linux_installer.sh`.
+
+### Building a .deb Package (Debian/Ubuntu)
+
+To create a `.deb` package for installation via `dpkg`/`apt`:
+
+#### Prerequisites
+
+- Debian/Ubuntu (or use the GitHub Actions CI workflow)
+- `dpkg-deb` installed (standard on Debian/Ubuntu)
+- A PyInstaller build already in `build/dist/TurbulenceRealmSINDy/`
+
+#### Build the package
+
+```bash
+# First, build the executable with PyInstaller
+pyinstaller TurbulenceRealmSINDy.spec
+
+# Then, build the .deb
+./scripts/make_deb.sh
+```
+
+The package will be in `installer/TurbulenceRealmSINDy-2.2.0-amd64.deb`.
+
+#### Install / uninstall
+
+```bash
+# Install
+sudo dpkg -i installer/TurbulenceRealmSINDy-2.2.0-amd64.deb
+
+# Uninstall
+sudo dpkg -r turbulencerealm-sindy
+```
+
+The `.deb` installs to `/opt/TurbulenceRealmSINDy/` and creates an application
+menu entry automatically. The package metadata is in `linux/deb/DEBIAN/control`.
+
 ## Project Structure
 
 ```
@@ -592,15 +662,22 @@ TR-SINDY/
 │       └── _provenance.py      # reproducibility metadata collection
 ├── logo.png                    # Turbulence Realm brand mark
 ├── logo.ico                    # Windows icon (for installer)
-├── DISCLAIMER.txt              # No-liability disclaimer (shown in installer)
+├── DISCLAIMER.txt              # No-liability disclaimer (shown in installers)
 ├── tests/                      # pytest test suite
 ├── scripts/
-│   └── build.py                # executable build script
+│   ├── build.py                # executable build script
+│   ├── make_linux_installer.sh # Makeself .run installer builder
+│   └── make_deb.sh             # .deb package builder
+├── linux/
+│   ├── install.sh              # Linux post-install script (shortcuts, uninstall)
+│   └── deb/                    # .deb package template
+│       ├── DEBIAN/control      # dpkg package metadata
+│       └── usr/share/          # .desktop entry + icon
 ├── archive/
 │   └── TR-SINDY-Final.py       # original v1.0 reference
 ├── .github/workflows/
 │   ├── ci.yml                  # CI: ruff + pytest + GUI smoke test
-│   └── build-release.yml       # Build Windows installer + Linux executable
+│   └── build-release.yml       # Build Windows + Linux installers
 ├── run.py                      # launcher script
 ├── pyproject.toml              # package metadata + tool config
 ├── TurbulenceRealmSINDy.spec   # PyInstaller spec
