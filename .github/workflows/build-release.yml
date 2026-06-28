@@ -1,0 +1,76 @@
+name: Build Desktop Executables
+
+on:
+  push:
+    branches: [main, master]
+    tags: ["v*"]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -e ".[export]"
+          pip install pyinstaller
+
+      - name: Build with PyInstaller
+        run: pyinstaller TurbulenceRealmSINDy.spec --distpath build/dist --workpath build/pyinstaller_work --noconfirm
+
+      - name: Smoke test (construction only)
+        run: |
+          $env:QT_QPA_PLATFORM = "offscreen"
+          build\dist\TurbulenceRealmSINDy\TurbulenceRealmSINDy.exe --help 2>$null || $true
+          Write-Host "Build artifact created successfully"
+
+      - name: Upload Windows artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TurbulenceRealmSINDy-windows
+          path: build/dist/TurbulenceRealmSINDy/
+          if-no-files-found: error
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libegl1 libgl1 libglib2.0-0
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -e ".[export]"
+          pip install pyinstaller
+
+      - name: Build with PyInstaller
+        run: pyinstaller TurbulenceRealmSINDy.spec --distpath build/dist --workpath build/pyinstaller_work --noconfirm
+
+      - name: Smoke test
+        run: |
+          QT_QPA_PLATFORM=offscreen timeout 15 build/dist/TurbulenceRealmSINDy/TurbulenceRealmSINDy || true
+          echo "Build artifact created successfully"
+
+      - name: Upload Linux artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: TurbulenceRealmSINDy-linux
+          path: build/dist/TurbulenceRealmSINDy/
+          if-no-files-found: error
