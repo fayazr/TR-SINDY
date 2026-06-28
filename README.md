@@ -30,9 +30,13 @@ The app features a gold/cream Turbulence Realm brand identity matching the
 
 - [Features](#features)
 - [Screenshots](#screenshots)
+- [Disclaimer](#disclaimer)
 - [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Using the GUI](#using-the-desktop-gui)
+  - [Windows](#windows-installation)
+  - [Linux](#linux-installation)
+  - [From Source](#from-source-developers)
+- [Quick Start Tutorial](#quick-start-tutorial)
+- [Using the GUI](#using-the-gui)
   - [Setup Page](#1-setup-page)
   - [Visualization Page](#2-visualization-page)
   - [ML Models Page](#3-ml-models-page)
@@ -43,6 +47,9 @@ The app features a gold/cream Turbulence Realm brand identity matching the
 - [Using the CLI](#using-the-cli)
 - [Building from Source](#building-from-source)
   - [Desktop Executable](#building-a-desktop-executable)
+  - [Windows Installer](#building-a-windows-installer-inno-setup)
+  - [Linux Installer](#building-a-linux-installer-makeself)
+  - [.deb Package](#building-a-deb-package-debianubuntu)
 - [Project Structure](#project-structure)
 - [Testing & Development](#testing--development)
 - [Citation](#citation)
@@ -152,9 +159,143 @@ The app features a navigation rail on the left with four main pages
 (Setup, Visualize, ML Models, Export), a glassmorphism background with drifting
 glow orbs, and gold/cream branding matching the [product website](https://www.turbulencerealm.com).
 
+## Disclaimer
+
+> **THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND.**
+>
+> In no event shall the authors or copyright holders be liable for any claim,
+> damages or other liability arising from the use of this software. The user
+> assumes all responsibility for the use of this software and any decisions
+> made based on its output.
+>
+> By installing this software you acknowledge that you have read and understood
+> the full disclaimer in [`DISCLAIMER.txt`](DISCLAIMER.txt).
+
+Both the Windows installer and the Linux installer display the full
+no-liability disclaimer during installation and require explicit acceptance
+before proceeding.
+
 ## Installation
 
-### From source (recommended)
+Pre-built installers are available from the
+[Releases page](https://github.com/fayazr/TR-SINDY/releases/tag/v2.2.0).
+No Python installation is required — everything is bundled.
+
+### Windows Installation
+
+#### Option A: Installer (recommended)
+
+1. Download **`TurbulenceRealmSINDy-2.2.0-Setup.exe`** from the
+   [Releases page](https://github.com/fayazr/TR-SINDY/releases/tag/v2.2.0).
+2. Double-click the downloaded `.exe` file.
+3. The install wizard will launch:
+   - **Welcome** — click Next
+   - **Disclaimer** — read the no-liability disclaimer. You must accept
+     to continue.
+   - **Install location** — defaults to `Program Files\Turbulence Realm SINDy`
+   - **Shortcuts** — Start Menu group + optional desktop icon
+   - **Install** — click to begin installation
+   - **Finish** — option to launch the app immediately
+4. The app is now available from the **Start Menu** → **Turbulence Realm SINDy**.
+
+To uninstall: **Settings → Apps → Turbulence Realm SINDy → Uninstall**, or
+use the uninstall shortcut in the Start Menu group.
+
+#### Option B: Portable (no install)
+
+1. Download **`TurbulenceRealmSINDy-2.2.0-windows.zip`**.
+2. Unzip to any folder.
+3. Run `TurbulenceRealmSINDy.exe`.
+
+No registry entries, no Start Menu shortcuts — just run the exe directly.
+
+### Linux Installation
+
+#### Option A: Interactive installer (recommended)
+
+1. Download **`TurbulenceRealmSINDy-2.2.0-Linux-Installer.run`** from the
+   [Releases page](https://github.com/fayazr/TR-SINDY/releases/tag/v2.2.0).
+2. Make it executable and run it:
+
+```bash
+chmod +x TurbulenceRealmSINDy-2.2.0-Linux-Installer.run
+./TurbulenceRealmSINDy-2.2.0-Linux-Installer.run
+```
+
+3. The installer will:
+   - Display the **no-liability disclaimer** — type `y` to accept
+   - Ask for install location (press Enter for default `/opt/TurbulenceRealmSINDy`)
+   - Copy files and create an **application menu entry**
+   - Ask whether to create a **desktop shortcut**
+   - Ask whether to **launch the app** now
+
+4. Launch from your application menu (search "Turbulence Realm") or run:
+
+```bash
+/opt/TurbulenceRealmSINDy/TurbulenceRealmSINDy
+```
+
+To uninstall:
+
+```bash
+/opt/TurbulenceRealmSINDy/install.sh --uninstall
+```
+
+#### Option B: .deb package (Debian/Ubuntu)
+
+1. Download **`TurbulenceRealmSINDy-2.2.0-amd64.deb`**.
+2. Install with dpkg:
+
+```bash
+sudo dpkg -i TurbulenceRealmSINDy-2.2.0-amd64.deb
+```
+
+3. The app appears in your application menu. Launch it or run:
+
+```bash
+/opt/TurbulenceRealmSINDy/TurbulenceRealmSINDy
+```
+
+To uninstall:
+
+```bash
+sudo dpkg -r turbulencerealm-sindy
+```
+
+#### Option C: Portable (no install)
+
+1. Download **`TurbulenceRealmSINDy-2.2.0-linux.zip`**.
+2. Unzip to any folder.
+3. Run:
+
+```bash
+./TurbulenceRealmSINDy
+```
+
+#### Linux system requirements
+
+- glibc 2.31+ (Ubuntu 20.04+, Debian 11+, Fedora 33+, etc.)
+- libGL, libEGL (pre-installed on most distros with a desktop environment)
+- libglib2.0 (pre-installed on most distros)
+
+If you get missing library errors, install them with:
+
+```bash
+# Debian/Ubuntu
+sudo apt install libegl1 libgl1 libglib2.0-0
+
+# Fedora
+sudo dnf install libglvnd-egl mesa-libGL glib2
+```
+
+### From Source (developers)
+
+#### Prerequisites
+
+- Python 3.9+
+- FFmpeg (only required for MP4 animation export)
+
+#### Install
 
 ```bash
 git clone https://github.com/fayazr/TR-SINDY.git
@@ -162,13 +303,13 @@ cd TR-SINDY
 pip install -e ".[ml,export]"
 ```
 
-### Minimal install (no ML / advanced export)
+#### Minimal install (no ML / advanced export)
 
 ```bash
 pip install -e .
 ```
 
-### Optional dependency groups
+#### Optional dependency groups
 
 | Group | Packages | Purpose |
 |-------|----------|---------|
@@ -181,26 +322,141 @@ pip install -e .
 > All optional features degrade gracefully: the app runs without them and
 > shows a clear message when a feature needs an optional dependency.
 
-### System requirements
+## Quick Start Tutorial
 
-- Python 3.9+
-- FFmpeg (only required for MP4 animation export)
-- A display (GUI mode) or headless (CLI mode)
+This tutorial walks through a complete analysis from video to exported
+results. It assumes you have installed the app using one of the methods
+above.
 
-## Quick Start
+### Step 1 — Launch the app
 
-```bash
-# Launch the GUI
-tr-sindy
-# or
-python run.py
+**Windows:** Start Menu → Turbulence Realm SINDy (or double-click
+`TurbulenceRealmSINDy.exe` if using the portable version).
 
-# Process a video from the command line
-tr-sindy-cli process video.mp4 \
-    --roi 600,300,1300,750 --calib-px 200 --calib-m 0.1 \
-    --backend farneback --library polynomial --degree 3 --threshold 0.07 \
-    --export-dir ./out --formats csv,hdf5,pdf
-```
+**Linux:** Application menu → Turbulence Realm SINDy (or run
+`/opt/TurbulenceRealmSINDy/TurbulenceRealmSINDy` from a terminal).
+
+You'll see the main window with a navigation rail on the left showing four
+pages: **Setup**, **Visualize**, **ML Models**, and **Export**. The Setup
+page is shown by default.
+
+### Step 2 — Open a video
+
+On the **Setup** page, click **Browse…** in the *Video Source* card (or use
+**File → Open Video** / Ctrl+O). Select a video file (MP4, AVI, MOV, or MKV).
+The first frame appears in the preview area and video info (resolution, FPS,
+frame count) is displayed.
+
+### Step 3 — Select the region of interest and calibrate
+
+Click **Select ROI & Calibrate**. A dialog opens showing the first frame:
+
+1. **Draw a rectangle** — click and drag over the region where you want to
+   measure flow (e.g. the area of a water tank or wind tunnel test section).
+2. **Draw a calibration line** — click and drag over an object of known
+   physical length (e.g. a ruler visible in the frame).
+3. **Enter the real-world length** in meters in the calibration field.
+4. Use **Ctrl+Z / Ctrl+Y** to undo/redo if you make a mistake.
+5. Click **OK**.
+
+The calibration readout now shows meters-per-pixel. All subsequent velocity
+measurements will be in physical units (m/s) rather than pixels.
+
+### Step 4 — Configure optical flow
+
+In the *Optical Flow Configuration* card, choose your settings:
+
+| Setting | Recommended | Description |
+|---------|-------------|-------------|
+| Backend | `farneback` | Robust dense flow (good default) |
+| Smoothing | `ema` | Reduces frame-to-frame flicker |
+| EMA α | `0.5` | Balance between responsiveness and smoothness |
+| Multi-scale | on | Better for large motions |
+| Gaussian denoise | on | Cleaner flow on noisy video |
+
+For a first run, the defaults are fine — just leave them as-is.
+
+### Step 5 — Configure SINDy
+
+In the *SINDy Configuration* card:
+
+| Setting | Recommended | Description |
+|---------|-------------|-------------|
+| Library | `polynomial` | Good starting point |
+| Degree | `3` | Captures nonlinear dynamics |
+| Optimizer | `stlsq` | Standard sparse regression |
+| Threshold | `0.07` | Higher = simpler model, lower = more terms |
+
+### Step 6 — Run the pipeline
+
+Click the three buttons in order:
+
+1. **① Process Optical Flow** — Extracts the velocity field from the video.
+   A live HSV + quiver preview appears. Watch the progress bar and ETA in the
+   status bar. When complete, the flow field is stored in memory.
+
+2. **② Run SINDy Modeling** — Fits the sparse dynamics model. The discovered
+   governing equations are displayed (e.g. `du/dt = -0.5*u + 0.3*v - 0.1*u*v`).
+   You can optionally:
+   - Click **Cross-validate** for k-fold cross-validation error
+   - Click **Compare** to try multiple libraries side-by-side
+
+3. **③ Run SINDy Prediction** — Reconstructs the predicted velocity field
+   using the discovered equations. This is what you'll visualize and export.
+
+### Step 7 — Visualize the results
+
+Click **Visualize** in the navigation rail. Try these visualizations:
+
+- **Quiver plot** — Side-by-side actual vs predicted velocity arrows. Use the
+  frame slider at the bottom to scrub through time.
+- **Vorticity** — Color-mapped rotation field (red = clockwise, blue =
+  counter-clockwise).
+- **Contour** — Velocity magnitude contours.
+- **Streamlines** — Flow path lines.
+- **Animated heatmap** — Press the play button to animate through all frames.
+
+Try different colormaps from the dropdown (viridis, plasma, magma, etc.).
+
+### Step 8 — Analyze (optional)
+
+From the Visualization page, explore the analysis tools:
+
+- **POD** — Extract dominant coherent structures and view the energy spectrum.
+- **DMD** — Identify spatiotemporal modes with growth rates.
+- **Spectra** — View the energy spectrum with a Kolmogorov fit.
+- **Turbulence stats** — TKE, Reynolds number, structure functions.
+
+### Step 9 — Export your results
+
+Click **Export** in the navigation rail. Check the formats you want and click
+**Export**:
+
+- **PDF report** — Comprehensive report with metrics and figures (great for
+  sharing).
+- **CSV** — Raw velocity data for further analysis in Python/MATLAB/Excel.
+- **HDF5** — Hierarchical format for large datasets.
+- **JSON metadata** — Full provenance (git commit, config, seed, SHA-256).
+- **MP4 animation** — Quiver animation video (requires FFmpeg).
+
+All exports include provenance metadata for full reproducibility.
+
+### Step 10 — Save the project (optional)
+
+Use **File → Save Project** (Ctrl+S) to save a `.trsindy` project file. This
+bundles the velocity memmaps so you can reload the full state later with
+**File → Load Project** (Ctrl+L) without reprocessing.
+
+You can also save your parameter configuration as a preset via **Presets →
+Save Current as Preset…** for reuse on future videos.
+
+### Next steps
+
+- Try different optical flow backends (Lucas-Kanade for speed, TV-L1 for
+  accuracy).
+- Experiment with SINDy libraries (Fourier, combined) and thresholds.
+- Train ML models on the ML Models page (requires `pip install -e ".[ml]"`).
+- Use the CLI for batch processing multiple videos (see [Using the CLI](#using-the-cli)).
 
 ## Using the GUI
 
@@ -211,30 +467,10 @@ The brand logo appears at the top of the rail, followed by the app title
 ### 1. Setup Page
 
 This is where you load a video, calibrate the scale, configure parameters, and
-run the processing pipeline.
+run the processing pipeline. See the [Quick Start Tutorial](#quick-start-tutorial)
+above for a step-by-step walkthrough.
 
-#### Step-by-step workflow
-
-**Step 1 — Open a video**
-
-Click **Browse…** in the *Video Source* card or use **File → Open Video**
-(Ctrl+O). Supported formats: MP4, AVI, MOV, MKV (anything OpenCV can decode).
-
-**Step 2 — Select ROI & Calibrate**
-
-Click **Select ROI & Calibrate**. A dialog opens showing the first frame:
-
-- **Draw a rectangle** over the region of interest (the area where you want
-  to measure flow).
-- **Draw a calibration line** of known physical length. Enter the real-world
-  length in meters.
-- Use **Ctrl+Z / Ctrl+Y** to undo/redo if you make a mistake.
-- Click **OK** when done. The calibration readout updates to show
-  meters-per-pixel.
-
-**Step 3 — Configure Optical Flow**
-
-Choose a backend and options in the *Optical Flow Configuration* card:
+#### Optical Flow Configuration
 
 | Option | Values | Description |
 |--------|--------|-------------|
@@ -246,9 +482,7 @@ Choose a backend and options in the *Optical Flow Configuration* card:
 | NLM denoise | on/off | Pre-denoise with Non-Local Means |
 | Quality metrics | on/off | Forward-backward consistency error |
 
-**Step 4 — Configure SINDy**
-
-Choose library and optimizer in the *SINDy Configuration* card:
+#### SINDy Configuration
 
 | Option | Values | Description |
 |--------|--------|-------------|
@@ -258,18 +492,7 @@ Choose library and optimizer in the *SINDy Configuration* card:
 | Threshold | 0.001–1.0 | Sparsity threshold (higher = sparser) |
 | Divergence-free | on/off | Enforce ∇·u = 0 |
 
-**Step 5 — Run the pipeline**
-
-Click the buttons in order:
-
-1. **① Process Optical Flow** — Extracts the velocity field. A live HSV +
-   quiver preview appears. Progress and ETA are shown in the status bar.
-2. **② Run SINDy Modeling** — Fits the sparse dynamics model. The discovered
-   equation is displayed. Optionally use **Cross-validate** for k-fold CV, or
-   **Compare** to try multiple libraries.
-3. **③ Run SINDy Prediction** — Reconstructs the predicted velocity field.
-
-**Step 6 — Apply a preset (optional)**
+#### Presets
 
 Use **Presets → List / Apply Preset…** to load saved parameter sets, or
 **Save Current as Preset…** to save your current configuration.
@@ -557,6 +780,7 @@ The installer will be in `installer/TurbulenceRealmSINDy-2.2.0-Setup.exe`.
 #### Installer features
 
 - **Disclaimer page**: Shows the no-liability disclaimer before installation
+  (user must accept to continue)
 - **Install location**: User-selectable (defaults to Program Files)
 - **Start Menu shortcut**: Creates a program group with app + uninstall links
 - **Optional desktop icon**: User can opt in during install
